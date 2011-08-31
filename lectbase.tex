@@ -1,7 +1,9 @@
 \usepackage{amsthm,amssymb,fullpage}
 \usepackage[slantfont,boldfont,CJKnumber,CJKtextspaces,CJKmathspaces]{xeCJK}
 \usepackage{tabularx}
+\usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multicol}
 \usepackage{pstricks}
 \usepackage{pst-node}
 \usepackage{pst-blur}
@@ -16,4 +18,12 @@
 {-3.5ex \@plus -1ex \@minus -.2ex}%
 {2.3ex \@plus.2ex}%
 {\Large \sf}}
+\renewcommand\subsection{\@startsection {subsection}{2}{\z@}%
+{-3.25ex\@plus -1ex \@minus -.2ex}{1.5ex \@plus .2ex}%
+{\normalfont \large \sf}}
+\renewcommand\subsubsection{\@startsection {subsubsection}{3}{\z@ }{-3.25ex\@plus -1ex \@minus -.2ex}{1.5
+ex \@plus .2ex}{\normalfont \normalsize \sf }}
 \makeatother
+
+\def\d{\mathrm{d}}
+\def\e{\mathrm{e}}

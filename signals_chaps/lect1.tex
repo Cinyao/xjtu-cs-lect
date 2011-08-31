@@ -2,7 +2,7 @@
 \hline \vskip -2mm
 {\sf 信号与系统} \hfill August 29, 2011 \\
 {\centering \sf \large Lecture 1:
-绪论 \\ }
+绪论\footnote{根据课件修正}\\ }
 \textit{Lecturer: 王磊 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
@@ -12,6 +12,15 @@
 \section{授课人联系方式}
 
     \textbf{王磊}, 82668772-549, 西1楼 549办公室, \url{lei.wang@mail.xjtu.edu.cn}
+
+\section{参考书}
+
+    \begin{enumerate}
+        \item A. V. Oppenheim, 信号与系统2e, 刘树棠译, 西安交通大学出版社, 1998.3
+        \item 吴湘淇, 信号、系统与信号处理, 北京:电子工业出版社, 1996
+        \item 郑君里、杨为理, 信号与系统, 清华大学出版社, 1999
+        \item 管致中、夏恭恪, 信号与线性系统, 人民教育出版社, 1983
+    \end{enumerate}
 
 \section{信号与系统}
 
@@ -28,58 +37,54 @@
         \end{tabular}
     \end{table}
 
-    信号的共性:
+    各种信号与系统的两个基本点:
 
     \begin{itemize}
-        \item 信号作为自变量的函数出现, 携带物理相关信息;
-        \item 系统对信号作出响应, 产生一个或多个信号.
+        \item 信号作为一个或多个独立变量(自变量)的函数出现, 携带某些物理现象或物理性质的相关信息;
+        \item 系统总会给定的对信号作出响应, 产生另一个或多个信号.
     \end{itemize}
 
 \section{信息、消息、信号和系统}
 
     \begin{description}
-        \item[信息] 消息中不确定性的度量
-        \item[消息] 客观对象, 具体, 不便于远距离传输
-        \item[信号] 消息的表现形式, 通常为物理量
-        \item[系统] 产生、传输和处理信号的物理装置
+        \item[信息] 存在于客观世界的一种事物形象
+        \item[消息] 用来表达信息的客观对象, 具体, 不便于远距离传输 \\
+            消息中有意义的内容称为信息, 信息是对消息不确定度的度量
+        \item[信号] 消息的表现形式, 通常为随自变量变化的物理量
+        \item[系统] 产生、传输和处理信号的物理装置 \\
+            基本作用: 对输入信号进行加工和处理, 将其转换为所需要的输出信号
     \end{description}
 
 \section{信号与系统的用例}
 
     \begin{itemize}
-        \item 系统辨识: 研究系统对给定输入信号所产生的输出响应\\\
+        \item 系统辨识: 研究系统对给定输入信号所产生的输出响应 \\
             「信道估计」
-        \item 系统设计: 信号处理和分析
+        \item 系统设计(信号处理和分析): 使给定输入信号经过系统后, 输出响应符合人们的希望或要求    
         \item 信号设计
         \item 系统的反馈和控制
     \end{itemize}
 
 \section{信号的分类}
 
-    依据确定性可以分为确定信号(detrerministic signals, 可以根据数学表达式, 规则或表格确定的信号. 本课程只讨论确定信号)和随机信号(random signals, 表现存在不确定性, 无法被准确预测). 依据采样方式分为连续信号 (continuous-time signals)和离散信号(discrete-time signals). 此外, 还分为一维信号和多维度信号, 本课程只讨论一维信号.
+    依据确定性可以分为确定信号(detrerministic signals)和随机信号(random signals). 依据采样方式分为连续信号 (continuous-time signals)和离散信号(discrete-time signals). 此外, 还分为一维信号和多维度信号, 本课程只讨论一维信号.
+
+    \subsection{确定信号和随机信号}
+
+    可以用确定时间函数表示的信号称为\textbf{确定信号}或\textbf{规则信号}, 如正弦信号; 若信号不能用确切的函数描述, 它在任意时刻的取值都具有不确定性, 只可以知道它的统计特性, 称为\textbf{随机信号}或\textbf{不确定信号}. 本课程只讨论确定信号.
+
+    \subsection{连续时间信号和离散时间信号}
+
+    \textbf{连续时间信号}是自变量连续变化的信号, 信号本身可以有间断点; \textbf{离散时间信号}是只在某些离散的时间点上才有定义的信号, 也称为\textbf{序列}. 本课程并行讨论这两大类信号与系统的分析.
+
+    如果一个系统的输入信号和输出响应都是连续时间信号, 则称它为连续时间系统.
 
 \section{本课程的任务}
 
+    围绕确知信号与线性时不变系统:
     \begin{enumerate}
-        \item 通过信号分解学习确知信号的分析方法 \\
-            时域, 频域, 变换域
-        \item 通过信号分析学习分析LTI(Linear time-invariant)系统的方法
-        \item 系统设计
+        \item 以信号分解为核心思想, 研究确知信号的分析方法. \\
+            信号分析法: 时域, 频域, 变换域(s域和z域);
+        \item 以信号分析为基础, 建立分析LTI(Linear time-invariant)系统的方法;
+        \item 初步掌握系统设计方法.
     \end{enumerate}
-
-\section{信号的表示}
-
-    \begin{description}
-        \item[连续信号] $x(t)$
-        \item[离散信号] $x(n)$ or $x[n]$
-    \end{description}
-
-    共性: 表示为一元函数
-
-\section{信号的能量与功率}
-
-    \begin{description}
-        \item[能量信号] 总能量无限: $E_\infty<\infty, P_\infty=0$
-        \item[功率信号]     $E_\infty=\infty, 0<P_\infty<\infty$
-    \end{description}
-        
