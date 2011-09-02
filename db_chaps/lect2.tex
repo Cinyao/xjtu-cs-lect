@@ -53,3 +53,37 @@
         \subsubsection{数据和信息}
 
             数据在\textbf{语法}(Syntax)和\textbf{语义}(Semantic)两个层面上有意义, 语法指的是数据的格式规定, 语义指的是数据本身的含义.
+
+            数据符号是对相应信息的抽象, 如: 将学号字段设计为字符串.
+
+        采用不同的数据模型抽象描述现实世界中不同类型的事物.
+
+        \subsubsection{数据模型}
+
+            数据模型是规定现实世界数据特征的抽象, 是用来描述数据的语法、语义和操作的一组概念的集合, 包括\textbf{数据结构}、\textbf{数据操作}和\textbf{数据完整性}三要素.
+
+            抽象的三个阶段:现实世界$\to$信息世界$\to$机器世界
+            \begin{itemize}
+                \item 概念数据模型: 面向用户和现实世界的数据模型, 与特定的DBMS无关
+                \item 逻辑数据模型: 用户从DBMS看到的数据模型, 与DBMS相关
+                \item 物理数据模型: 反映数据存储结构的数据模型
+            \end{itemize}
+
+            \begin{figure}[h]\centering
+                \begin{psmatrix}
+                 \psovalbox[fillcolor=lightgray, fillstyle=solid]{现实世界}\\
+                 \psframebox{信息世界概念模型, 如E-R模型} \\
+                 \psframebox{机器世界数据模型}
+                 \end{psmatrix}
+                 \ncline{->}{1,1}{2,1}\naput{认识抽象}
+                 \ncline{->}{2,1}{3,1}\naput{转换}
+             \end{figure}
+
+        \subsubsection{数据模式}
+
+            \begin{itemize}
+                \item 外模式
+                \item 模式
+                \item 内模式
+            \end{itemize}
+

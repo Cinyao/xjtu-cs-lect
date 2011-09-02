@@ -1,0 +1,72 @@
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 操作系统原理} \hfill September 2, 2011 \\
+{\centering \sf \large Lecture 2:
+绪论\footnote{参考了计算机92班崔晨晨的笔记, 根据课件修正} \\ }
+\textsl{Lecturer: 何晖 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+\def\lecture{2}
+
+\section{历史上的几种操作系统}
+
+    \subsection{分时系统 Time-sharing systems}
+
+        分时: 将CPU的时间分成若干个时间片(time slice)
+
+        \begin{itemize}
+            \item 及时性: 在可以接受的时间内迅速返回结果
+            \item 多路性: 内存中的多路程序同时并发执行
+            \item 独占性: 各终端用户感觉到自己独占了计算机
+            \item 交互性: 用户与计算机之间进行``会话''
+        \end{itemize}
+
+        有名的分时系统: MIT的MULTICS, Bell Lab的UNIX.
+
+    \subsection{实时系统 Real-time systems}
+
+        专用用途系统(Special-purpose OS), 对任务执行时间有严格的时间限制(任务执行的时间可预测), 可靠性要求高. 分为硬实时系统和软实时系统. 具有实时时钟管理, 过载保护, 高度可靠性和安全性, 具有基于优先级的可抢占的调度.
+
+    \subsection{并行系统 Paralleled systems}
+
+        有紧密通信的多处理器系统, 紧耦合(tightly coupled)
+
+        优势:
+        \begin{itemize}
+            \item 更大的吞吐量
+            \item 更经济
+            \item 更可靠
+            \item 优雅降级
+            \item 软失效
+        \end{itemize}
+
+        实现上有``对称多处理''(SMP)和非对称多处理(ASMP)
+
+    \subsection{分布式系统 Distributed systems}
+
+        优势:
+        \begin{itemize}
+            \item 资源共享
+            \item 负载均衡
+            \item 更可靠
+        \end{itemize}
+
+    \subsection{网络操作系统 Network operating systems}
+
+        在通常OS的基础上提供网络通信和网络服务功能.
+
+    \subsection{比较分布系统和网络系统}
+
+        \begin{table}[h]\centering
+            \caption{Comparing Distributed Systems and Network Systems}
+            \label{tab:2:comparing-distributed-network}
+            \begin{tabular}{ccc}\toprule
+                比较项目 & \bf 分布系统 & \bf 网络系统 \\ \midrule
+                耦合程度 & OS同质 & 协议同质 \\
+                并行性 & 进程迁移 & 进程独立 \\
+                透明性 & 用户透明 & 由用户指定 \\
+                \bottomrule
+            \end{tabular}
+        \end{table}
+
