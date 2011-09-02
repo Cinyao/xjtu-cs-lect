@@ -1,0 +1,60 @@
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill August 31, 2011 \\
+{\centering \sf \large Lecture 1:
+绪论\footnote{参考了计算机92班崔晨晨的笔记} \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+\def\lecture{1}
+
+\subsection{课程性质}
+
+    原理性课程: 基础性, 科学性, 普适性, 针对性差
+
+\subsection{学习的目的}
+
+    \begin{itemize}
+        \item 实现(通用)编译器
+        \item 实现专用编译器
+        \item 学习编译思想 \\
+            计算思维: 抽象, 自动化
+    \end{itemize}
+
+\subsection{如何学}
+
+    \begin{itemize}
+        \item 把握三年级的特点
+        \item 纪律: 准时到, 认真听, 注意记
+        \item 注意学习方法
+    \end{itemize}
+
+\section{什么叫编译程序}
+
+    \subsection{编译程序历史}
+
+        \begin{itemize}
+            \item 编译程序是系统软件中资格最老的成员之一
+            \item 发展十分迅速和成熟
+            \item 系统化的理论和技术
+        \end{itemize}
+
+
+    \subsection{编译理论与其他课程关系}
+
+    \subsection{编译理论的应用}
+
+    \subsection{编译程序和翻译程序}
+
+        \textbf{翻译程序}: 输入是某种语言, 输出是另一种语言
+
+    \subsection{编译程序}
+
+        高级语言源程序通过编译程序生成面向机器的代码, 装配成目标程序代码.
+
+\section{编译过程概述}
+
+    \subsection{编译过程的组成}
+
+        源程序通过\textbf{词法分析}分解为单词和符号, 通过\textbf{语法分析}被识别为语法单位, 通过\textbf{中间代码生成}产生中间代码, 通过\textbf{代码优化}和\textbf{目标代码生成}产生目标代码.
