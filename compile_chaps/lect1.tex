@@ -1,13 +1,13 @@
+\def\lecture{1}
 \clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
 \hline \vskip -2mm
 {\sf 编译原理} \hfill August 31, 2011 \\
-{\centering \sf \large Lecture 1:
+{\centering \sf \large Lecture \lecture:
 引论\footnote{参考了计算机92班崔晨晨的笔记, 根据课件修正} \\ }
 \textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
 \renewcommand{\thepage}{\lecture -\arabic{page}}
-\def\lecture{1}
 
 \section{关于这门课程}
     
@@ -80,17 +80,19 @@
 
         主要理论基础: 上下文无关文法
 
-    \subsection{中间代码生成(IR generation)}
+    \subsection{中间代码生成(IR\protect\footnote{intermediate representation} generation)}
 
-        任务: 在语法范畴进行初步翻译
+        任务: 在语法范畴进行初步翻译, 翻译成等价的中间语言.
+
+        \textbf{中间语言}被认为是一种形式化的语言, 其中的一种叫做四元式.
 
         依据: 语义规则
 
         主要理论基础: 属性文法
 
-    \subsection{中间代码优化(IR generation)}
+    \subsection{中间代码优化(IR optimization)}
 
-        任务: 对代码(主要是中间代码)进行加工变换, 在执行结果相同的情况下产生更高效的目标代码.
+        任务: 对代码(主要是中间代码)进行加工变换, 在\textsl{执行结果相同}的情况下产生\textsl{时间和空间上}更高效的中间代码.
 
         依据: 程序等价变换规则
 
@@ -98,7 +100,13 @@
 
     \subsection{目标代码生成(code generation)}
 
-        任务: 将中间代码变换为特定机器上的低级机器语言代码
+        任务: 将中间代码变换为\textsl{特定机器}上的低级机器语言代码
+
+        \begin{itemize}
+            \item 内存单元分配
+            \item 寄存器分配
+            \item 指令集选择
+        \end{itemize}
 
         目标代码形式: 绝对指令, 可重定位指令, 汇编指令
 

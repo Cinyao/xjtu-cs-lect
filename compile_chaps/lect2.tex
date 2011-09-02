@@ -3,9 +3,121 @@
 \hline \vskip -2mm
 {\sf 编译原理} \hfill September 2, 2011 \\
 {\centering \sf \large Lecture \lecture:
- \\ }
+编译程序 \\ }
 \textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
 \renewcommand{\thepage}{\lecture -\arabic{page}}
 
+\section{编译程序的结构}
+
+    编译全程伴随\textbf{表格管理}和\textbf{出错处理}.
+
+    \subsection{表格管理}
+
+        编译的各个阶段都要维护(许多)表格并进行表格管理. 技术基础是数据结构, 表格的分类、结构和处理方法取决于语言和特定的机器以及优化措施.
+
+        编译程序涉及到的表格有符号名表、常数表、标号表、入口名表、过程引用表、循环表、等价名表、公用链表、格式表、中间代码表等.
+
+    \subsection{出错处理}
+        
+        一个好的编译器应当具有的特点:
+        \begin{description}
+            \item[全] 最大限度发现错误
+            \item[准] 准确指出错误的性质和发生地点
+            \item[局部化] 将错误的影响控制在尽可能小的范围内
+        \end{description}
+
+        自动纠正错误的代价较大. 源程序中的错误包括
+        \begin{description}
+            \item[语法错误] 不符合语法规则的错误, 如单词拼写出错、括号不匹配
+            \item[语义错误] 不符合语义规则的错误, 如说明错误、作用域错误、类型不匹配
+        \end{description}
+
+    \subsection{遍}
+
+        \textbf{遍}: 对源程序或源程序的中间结果\textsl{从头到尾扫描一次}并\textsl{做有关的加工处理}, 生成新的中间结果或目标程序
+
+    \subsection{编译的前端和后端}
+
+        \textbf{前端}(front-end): 由与源语言有关但与目标机无关的部分组成
+
+        \begin{itemize}
+            \item 词法分析
+            \item 语义分析
+            \item 产生中间代码
+        \end{itemize}
+
+        \textbf{后端}(back-end): 编译程序中与目标机有关的部分
+
+\section{编译程序生成}
+
+    \subsection{编译程序的构造工具}
+
+        一种自动化的做法: ``只给(词法, 语法, 语义, \ldots)规则, 要求得到编译器'', 规则要公式化(正规化). 规则就是语言. 这货真的存在.
+
+        现在大多采用高级语言, 但核心部分或采用机器语言或汇编语言.
+
+    \subsection{T型图}
+
+        用高级语言写高级语言编译器的工具.
+
+        \begin{figure}[h]\centering
+            \begin{minipage}{0.5\linewidth} \centering
+                \includegraphics[width=5cm]{compile_chaps/lect2_inc/Bootstrapping-t-diagram.png}
+                \caption{Bootstrapping-t-diagram, Public Domain}
+                \label{fig:2:bootstrapping}
+                % https://secure.wikimedia.org/wikipedia/en/wiki/File:Bootstrapping-t-diagram.png
+                % 公有领域
+            \end{minipage}
+            \begin{minipage}{0.45\linewidth}
+                {\small
+\begin{verbatim}          +--------------+    +--------------+
+          | L3        A0 |    | L3        A0 |
++---------+----+    +----+----+----+    +----+
+| L2        A0 | L2 | L2        A0 | A0 |
++----+    +----+----+----+    +----+----+
+     | L1 | L1        A0 | A0 |
+     +----+----+    +----+----+
+               | A0 |
+               +----+\end{verbatim}}
+                \caption{3级自展技术(取自百度贴吧)}
+                \label{fig:2:3-self-extract}
+                % http://tieba.baidu.com/f?kz=387450349
+            \end{minipage}
+        \end{figure}
+
+
+        可以用于软件移植.
+
+    \subsection{自编译方式}
+
+        思想: 先完成最核心的部分.
+
+    \subsection{构造工具}
+
+        编译程序产生器.
+
+        已经完成的自动产生扫描器有lex、flex等, 自动产生语法分析器有yacc、Bison等
+
+\iffalse
+\section{词法分析}
+
+    任务: 扫描源程序, 产生单词符号, 将字符串源程序改造为中间程序.
+
+    执行词法分析的程序称为\textbf{词法分析器/扫描器}.
+
+    \subsection{词法分析器的要求}
+
+        \subsubsection{词法分析器的功能和输出形式}
+
+            \textbf{单词符号}: 一个程序语言的基本语法符号, 一般分为5种:
+
+            \begin{enumerate}
+                \item 关键字(保留字, reserved words)
+                \item 标识符(identifiers), 无限
+                \item 常数(constants), 无限
+                \item 运算符(operators)
+                \item 界符
+            \end{enumerate}
+\fi
