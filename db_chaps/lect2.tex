@@ -62,24 +62,42 @@
 
             数据模型是规定现实世界数据特征的抽象, 是用来描述数据的语法、语义和操作的一组概念的集合, 包括\textbf{数据结构}、\textbf{数据操作}和\textbf{数据完整性}三要素.
 
-            抽象的三个阶段:现实世界$\to$信息世界$\to$机器世界
-            \begin{itemize}
-                \item 概念数据模型: 面向用户和现实世界的数据模型, 与特定的DBMS无关
-                \item 逻辑数据模型: 用户从DBMS看到的数据模型, 与DBMS相关
-                \item 物理数据模型: 反映数据存储结构的数据模型
-            \end{itemize}
+            抽象的三个阶段:现实世界$\to$信息世界$\to$机器世界:
 
             \begin{figure}[h]\centering
                 \begin{psmatrix}
-                 \psovalbox[fillcolor=lightgray, fillstyle=solid]{现实世界}\\
-                 \psframebox{信息世界概念模型, 如E-R模型} \\
-                 \psframebox{机器世界数据模型}
+                     \psovalbox[fillcolor=lightgray, fillstyle=solid]{现实世界}\\
+                     \psframebox{信息世界概念模型, 如E-R模型} \\
+                     \psframebox{机器世界数据模型}
                  \end{psmatrix}
                  \ncline{->}{1,1}{2,1}\naput{认识抽象}
                  \ncline{->}{2,1}{3,1}\naput{转换}
+                 \caption{抽象数据模型}
+                 \label{fig:2:abstract}
              \end{figure}
 
+            \begin{itemize}
+                \item \textbf{概念数据模型}: 面向用户和现实世界的数据模型, 与特定的DBMS无关;
+                \item \textbf{逻辑数据模型}: 用户从DBMS看到的数据模型, 与DBMS相关; \\
+                    经典的有三类: 
+                    \begin{itemize}
+                        \item 层次模型(树): 自上而下, 只表示了一对多的联系, 查询和更新复杂
+                        \item 网状模型(图): 一个以上的结点无父结点, 至少有一个结点有多于一个的父结点
+                        \item 关系模型(表, 主流): 逻辑结构是``二维表'', 结构简单, 容易理解. 常见数据库系统都是关系型数据库.
+                    \end{itemize}
+                    各种经典逻辑数据模型之间的根本区别在于数据之间联系的表示方式不同.
+                \item \textbf{物理数据模型}: 反映数据存储结构的数据模型.
+            \end{itemize}
+
+            面向对象模型: 90年代出现, 但因为一些原因使用受到限制. 有类和实例的概念. 
+
         \subsubsection{数据模式}
+
+            模式是数据库中全体数据的逻辑结构和特征的描述, 仅仅设计类型的描述, 不设计具体的值. 模式的一个具体值称为模式的一个实例(instance).
+
+            型(type)是对某一类数据的结构和属性的说明, 值(value)是型的一个具体赋值.
+
+            \textbf{主键}(primary key): 在确定元组方面存在唯一性. 可以存在多个主键.
 
             \begin{itemize}
                 \item 外模式
