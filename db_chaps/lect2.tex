@@ -1,0 +1,55 @@
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 数据库系统原理} \hfill September 2, 2011 \\
+{\centering \sf \large Lecture 2:
+数据库系统 \\ }
+\textsl{Lecturer: 冯中慧 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+\def\lecture{2}
+
+\section{数据管理各阶段的比较}
+
+    \begin{itemize}
+        \item 人工管理阶段
+        \item 文件系统阶段
+        \item 数据库系统阶段
+    \end{itemize}
+
+    \subsection{知名数据库产品}
+
+        微软的有SQL Server, 此外还有开源的MySQL(先被Sun公司拥有, 然后被Oracle收购)
+
+    \subsection{保证数据安全的方法}
+
+        采用冗余备份, 记录log.
+
+\section{数据库系统}
+
+    \begin{figure}[h]\centering
+        \begin{psmatrix}[rowsep=0.5]
+            \psovalbox{程序员用户} \\
+            \psovalbox{终端用户} & 三类用户 & \psdblframebox{数据库管理系统(DBMS)} & \psframebox{数据库(DB)} \\
+            \psovalbox{数据库管理员(DBA)} \\
+        \end{psmatrix}
+        \ncangle[angleA=0, angleB=180]{-}{1,1}{2,2}
+        \ncangle[angleA=0, angleB=180]{-}{2,1}{2,2}
+        \ncangle[angleA=0, angleB=180]{-}{3,1}{2,2}
+        \ncline{<->}{2,2}{2,3}
+        \ncline{<->}{2,3}{2,4}
+        \caption{数据库系统与用户}
+        \label{fig:2:db-and-user}
+    \end{figure}
+   
+    \subsection{数据模型与数据库模式}
+
+        描述、组织和存放数据的方式涉及到数据模型和数据模式概念.
+
+        \textbf{数据模型}(Data Model): 建立数据库的基础.
+
+        \textbf{数据模式}(Data Schema): 在设计数据库的不同阶段需要建立不同的数据模式. 
+
+        \subsubsection{数据和信息}
+
+            数据在\textbf{语法}(Syntax)和\textbf{语义}(Semantic)两个层面上有意义, 语法指的是数据的格式规定, 语义指的是数据本身的含义.
