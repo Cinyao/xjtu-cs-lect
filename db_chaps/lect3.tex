@@ -2,11 +2,41 @@
 \hline \vskip -2mm
 {\sf 数据库系统原理} \hfill September 6, 2011 \\
 {\centering \sf \large Lecture 3:
-数据库系统 \\ }
+数据库系统\footnote{根据《数据库系统概念、设计与应用》补充} \\ }
 \textsl{Lecturer: 冯中慧 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
 \renewcommand{\thepage}{\lecture -\arabic{page}}
 \def\lecture{3}
+
+\section{数据库管理系统}
+
+    \subsection{DBMS的结构}
+
+        \textbf{DBMS}: 数据库系统的核心, 介于用户和OS之间. DBMS提供各类用户接口, 提供数据库的运行管理和数据目录管理.
+
+        DBMS使用数据库语言, 有编译和解释两类实现方法, 但逐步被预编译的方法取代.
+
+    \subsection{DBMS的进程结构}
+
+            多线程DBMS, 由DBMS调度线程, 支撑技术有非阻塞I/O和公平调度.
+
+    \subsection{元数据}
+
+        关于数据的数据, 与关系模式有关的内容也是一类数据.
+
+\section{关系模型}
+
+    由E.F. Codd于1970年提出, 以集合论为基础. 代表系统有IBM的System R和UCB的DBMS Ingres. System R导致了SQL和DB2、Oracle等的开发.
+
+    \subsection{关系数据库的结构}
+
+        关系模型基于\textbf{关系}的概念, 所有数据用关系(也称为\textbf{表})来作为逻辑结构. 一个关系有固定数量的命名的列(\textbf{属性})和可变数量的行(\textbf{元组}).
+
+        \textbf{域}是\textbf{原子}\footnote{域中每个值对关系模型是不可见的}值的集合, 同一个域中所有值具有相同的数据类型. 域通常用名字、数据类型、格式以及值的范围来指定. 每个元组是$D_1\times D_2\times D_3\times\cdots\times D_n$笛卡尔积集合的成员, 而$D_1\times D_2\times D_3\times\cdots\times D_n$的子集被称为一个\textbf{关系}, 记为$R$.
+
+        如果一个关系中的某个属性或属性集能够唯一的确定一个元组, 则称该属性(集)是这个关系上的超键(Super key). 如果将超键中的任一属性去掉后剩余的属性集不能唯一标识一个元组, 则称该属性集是关系上的候选键(Candidate key), 通常从候选键中选择一个使用, 这个候选键称为关系的主键(Primary key). 如关系中的属性或属性组不是本关系的键, 而引用其他关系或本关系的键, 则称为本关系的外键(Foreign key).
+
+
 
 

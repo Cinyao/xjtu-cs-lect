@@ -2,7 +2,7 @@
 \hline \vskip -2mm
 {\sf 数据库系统原理} \hfill September 2, 2011 \\
 {\centering \sf \large Lecture 2:
-数据库系统 \\ }
+数据库系统\footnote{根据《数据库系统概念、设计与应用》补充} \\ }
 \textsl{Lecturer: 冯中慧 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
@@ -93,15 +93,28 @@
 
         \subsubsection{数据模式}
 
-            模式是数据库中全体数据的逻辑结构和特征的描述, 仅仅设计类型的描述, 不涉及具体的值. 模式的一个具体值称为模式的一个实例(instance).
+            模式是数据库中全体数据的逻辑结构和特征的描述, 给出实体和属性名, 指定了它们之间的联系, 仅仅涉及类型的描述, 不涉及具体的值. 模式的一个具体值称为模式的一个实例(instance).
+
+            模式是数据库系统模式结构的中间层, 是所有用户的公共数据视图, 属于逻辑抽象.
 
             型(type)是对某一类数据的结构和属性的说明, 值(value)是型的一个具体赋值.
 
             \textbf{主键}(primary key): 在确定元组方面存在唯一性. 可以存在多个主键.
 
             \begin{itemize}
-                \item 外模式
+                \item \textbf{外模式}, 也称子模式或用户模式, 属于视图层抽象, 是数据库用户能够看见和使用的局部数据的逻辑结构和特征的描述. 是模式的一个子集.
                 \item 模式
-                \item 内模式, 最接近底层实现
+                \item \textbf{内模式}, 也称存储模式, 属于物理层抽象, 最接近底层实现
+            \end{itemize}
+
+        \subsubsection{映射}
+
+            三层之间转换请求和结果的过程称为\textbf{映射}. ANSI-SPARC的三层架构模型提供了两级映射:
+
+            \begin{itemize}
+                \item 概念模式/内模式映射: 物理数据独立性 \\
+                    定义了概念视图和存储数据库之间的对应关系
+                \item 外模式/概念模式映射: 逻辑数据独立性 \\
+                    定义了特定的外部视图和概念视图之间的对应关系
             \end{itemize}
 
