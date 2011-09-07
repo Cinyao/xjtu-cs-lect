@@ -1,0 +1,50 @@
+\def\lecture{3}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 7, 2011 \\
+{\centering \sf \large Lecture \lecture:
+词法分析 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+词法分析的任务: 扫描源程序, 产生单词符号, 将字符串源程序改造为中间程序.
+
+执行词法分析的程序称为\textbf{词法分析器/扫描器}.
+
+\section{词法分析器的要求}
+
+    \subsection{词法分析器的功能和输出形式}
+
+        \textbf{单词符号}: 一个程序语言的基本语法符号, 一般分为5种:
+
+        \begin{enumerate}
+            \item 关键字(保留字, reserved words)
+            \item 标识符(identifiers), 在确定的语言中, 数量是无限的
+            \item 常量(constants), 数量是无限的
+            \item 运算符(operators)
+            \item 界符(delimeter)
+        \end{enumerate}
+
+        输出形式: 二元组(单词类别, 单词自身), 为了确保二元组大小相等, ``单词自身''可以是指针.
+
+        \subsubsection{词法分析和语法分析的关系}
+
+            词法分析从语法分析中脱离出来的好处: 在这一步采用更简单的扫描方法.
+    
+    \subsection{词法分析器的设计}
+
+        \subsubsection{输入和预处理}
+
+            \textbf{预处理}: 去除无用字符. 除了输入缓冲区之外, 还需要\textbf{扫描缓冲区}. 缓冲区的长度: 至少是标识符最大长度的两倍.
+
+        \subsubsection{单词符号识别}
+
+            一些语言对关键字不做特殊保护, 如Fortran, 识别关键字比较麻烦. 一种解决方案是``超前搜索'', 但会造成词法分析器实现困难. 
+
+            一种更常用的解决方案是对用户进行限制, 如禁止将保留字作为标识符, 将空格等符号作为界符.
+
+        \subsubsection{状态转换图}
+
+            功能: 识别一定的字符串. 初态对应转换图的启动条件, 终态对应转换图的结束条件. 其中*代表读入了一个字符.
