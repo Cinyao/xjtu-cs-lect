@@ -1,0 +1,58 @@
+\def\lecture{5}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 14, 2011 \\
+{\centering \sf \large Lecture \lecture:
+正规表达式与有限自动机 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+如果一个DFA $M$的输入字母表为$\Sigma$, 则$M$也是$\Sigma$上的一个DFA. 可以证明, $\Sigma$上的一个字集$V\subset\Sigma^*$是正规的, 当且仅当存在$\Sigma$上的DFA $M$, 使得$V=L(M)$.
+
+DFA的确定性表现在映射$\delta$: $S\times\Sigma\to S$是一个单值函数. 如果允许是多值函数, 就得到了非确定自动机的概念.
+
+\section{非确定有限自动机(NFA)}
+
+    NFA与DFA定义的区别:
+
+    3. $\delta$是一个从$S\times\Sigma^*$的子集的映射, 即$\delta: S\times\Sigma^*\to2^S$
+
+    表现在状态图上的区别: NFA允许接受$\varepsilon$或者多字母串作为单个输入. 
+
+    \subsection{子集法确定闭包}
+
+        DFA是NFA的特例, 可以采用子集法将NFA确定化
+
+        $\mathbf{I}$的$\varepsilon$-闭包($\varepsilon$-CLOSURE$(\mathbf{I})$):
+        \begin{enumerate}
+            \item 若$S\in \mathbf{I}$, 则$S\in \varepsilon$-CLOSURE$(\mathbf{I})$;
+            \item 若$S\in \mathbf{I}$, 则从$S$出发经过任意条$\varepsilon$弧能到达的任意状态$S'$都属于$\varepsilon$-CLOSURE$(\mathbf{I})$
+        \end{enumerate}
+
+        $\mathbf{I}_a$定义: $\mathbf{I}_a=\varepsilon$-CLOSURE$(\mathbf{J})$, 其中$\mathbf{J}$是可从$\mathbf{I}$中的某一状态节点出发经过一条$a$弧到达的状态节点的全体.
+
+    \subsection{NFA$\to$DFA: 子集算法}
+
+        \begin{enumerate}
+            \item 构造初始化的表
+            \item 处理表的一行
+            \item 重复处理
+        \end{enumerate}
+
+        表的长度是有限的.
+
+        任何NFA都可以通过子集法变为对应的DFA.
+
+\section{正规文法与有限自动机的等价性}
+
+    \subsection{确定机的化简}
+
+        寻找状态数比$M$少的一个DFA $M'$, 使得$L(M)=L(M')$
+
+\iffalse
+
+    \section{词法分析器的自动生成}
+
+\fi
