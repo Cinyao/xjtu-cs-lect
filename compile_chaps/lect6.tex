@@ -1,0 +1,73 @@
+\def\lecture{6}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 16, 2011 \\
+{\centering \sf \large Lecture \lecture:
+词法分析器和上下文无关文法 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{词法分析器}
+
+    \newcommand{\pb}[1]{\parbox[c]{12ex}{#1}}
+    \begin{figure}\centering
+        \begin{psmatrix}[rowsep=0.5]
+            \psframebox{对$x$的描述} & \psframebox{$x$的生成器} & \psframebox{$x$} \\
+            \psframebox{lex源程序} & \psframebox{lex} & \psframebox{词法分析器} \\
+            \psframebox{正规定义式$P_i,A_i$} & \psframebox{\pb{$P_i\to M_i$, NFA, DFA, 状态转换表}} & \psframebox{\pb{\fbox{控制程序} \fbox{转换矩阵}}} 
+            \ncline{->}{1,1}{1,2}
+            \ncline{->}{1,2}{1,3}
+            \ncline{1,2}{2,2}
+            \ncline{2,1}{2,2}
+            \ncline{->}{2,2}{2,3}
+            \ncline{->}{3,1}{3,2}
+            \ncline{->}{3,2}{3,3}
+        \end{psmatrix}
+        \caption{词法分析器的工作过程}
+        \label{fig:lex}
+    \end{figure}
+
+    X的描述通过生成器生成X. lex是词法分析器的生成器, 生成词法分析器.
+
+    我们已经了解到, \textbf{各种语言的构成规则可以通过正规式来描述}. 其中3类是可以穷举的. \textbf{正规式和DFA是等价的}.
+
+    \subsection{语言lex的一般描述}
+
+        lex源程序$=$正规定义式$+$识别规则. \textsf{正规定义式}: 定义在字母表$\Sigma$上的正规定义式序列: $d_1\to r_1, d_2\to r_2$, 其中$d_i$表示不同名字, $r_i$为正规式. Pascal的标识符集合: $letter\to \cdots, digit\to \cdots, id\to letter(letter|digit)^*$.
+
+        lex源程序的识别规则是一串如下形式的lex语句:
+\begin{verbatim}
+P1 {A1}
+P2 {A2}
+... ...
+Pm {Am}
+\end{verbatim}
+
+        $P_i$是一个正规式, 称为\textsf{词形}; $A_i$是执行的动作: return(code, value).
+
+    \subsection{lex的实现}
+
+        将NFA合并为NFA, 然后确定化得到等价的DFA. 
+
+        词法分析器的两部分: 控制, 转化表. 同一个词法分析器生成器生成的不同词法分析器的控制部分是一样的, 但转化表不同. 控制部分的功能:读字符, 在DFA上运行, 最大串匹配, 终态判别, 构造二元组返回.
+
+\section{上下文无关文法 Context-free Grammar}
+
+    研究上下文无关文法的目的: 语言的语法结构的形式描述; 从形式描述中, 研究语法分析器的构造.
+
+
+    \subsection{引言}
+
+        \textsf{文法(grammar)}是描述语言的语法结构的形式规则. 目的是解决语言的有穷说明问题, 包含对语法的描述, 但却不表达任何语义. 文法的描述应当: 形式上严格准确, 易于理解, 具有较强的描述能力, 有利于句子的分析和翻译, 构造语法分析器.
+
+        文法分为4类, 对应4类语言. 与程序语言语法有关的是上下文无关文法(2型文法). 0型文法: $G=(V_T, V_N, S, \mathcal{P})$, 产生式$\alpha\to\beta$满足$\alpha\in(V_N\cup V_T)^*$且至少含有一个$V_N$符, $\beta\in(V_N\cup V_T)^*$. 2型文法: $\alpha$串改为$A$符号. 3型文法: 只允许一个非终结符号且在最右边 $A\to\alpha B$. 形式文法不能描述自然语言.
+
+        \textsf{上下文无关文法}定义的语法范畴(或语法单位)完全独立于这种范畴可能出现的环境. 只能描述一部分语言. 上下文无关文法$G$是一个四元式$(V_T,V_N,S,\mathcal{P})$, 其中$V_T$是非空有限集, 元素是终结符号, $V_N$元素是非终结符号, $S\in V_N$称为开始符号, $\mathcal{P}$是产生式集合, 每个产生式形式是$\{P\to\alpha|P\in V_N, \alpha\in(V_T\cup V_N)*, \textrm{S至少一次为P}\}$. \textsf{终结符号}: 用以组成语言中的串的\textbf{基本}符号; \textsf{非终结符}: 是标记某种\textbf{串}的集合的特定符号. \textsf{开始符号}是一个非终结符号, 标记感兴趣的语法范畴, 定义文法的顶层. C语言的开始符号: 程序. \textsf{产生式}规定由终结符和别的语法范畴组成一个新的语法范畴的方法, 语法结构: 非终结符$\to$一串非终结符和终结符. 
+
+        用有穷条产生式得到无穷的表达式语言, 必须递归.
+
+        \textsf{直接推导}是两个字符串之间的一种关系: $(\alpha A\beta)\mathcal{R}(\alpha\gamma\beta)$, 若$A\to\gamma\in\mathcal{P}, \alpha, \beta\in V^*, V=V_T\cup V_N$, 则$\mathcal{R}$就是直接推导, 记为$\alpha A\beta\Rightarrow\alpha\gamma\beta$. \textsf{推导}是两个串$u_0, u_n$存在一个串序列$u_0\Rightarrow u_1\Rightarrow \cdots\Rightarrow u_n$, 则$u_0\mathcal{R}_1u_n$. $u_0\stackrel{+}{\Rightarrow}u_n$表示从$u_0$出发, 经过一步或若干步可推导出$u_n$. $u_0\stackrel{*}{\Rightarrow}u_n$表示从$u_0$出发, 经过零步或若干步可推导出$u_n$. 
+
+        要由推导引出语言, 限制推导中的$u_0$为$S$, 推导要从开始符号开始. $S\stackrel{*}{\Rightarrow}\alpha, \alpha\in V^*$, 称$\alpha$为$G$的\textsf{句型}, 如再要求$\alpha\in V_T^*$, 则$\alpha$为$G$的\textsf{句子}. 文法$G$所产生的句子的全体是一个\textsf{语言}, 记为$L(G)=\{\alpha|S\stackrel{+}{\Rightarrow}\alpha\&\alpha\in V_T^*\}$. 从一个句型到另一个句型的推导过程一般不唯一, 通常只考虑最左推导和最右推导.
