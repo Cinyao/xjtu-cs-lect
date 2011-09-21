@@ -1,11 +1,41 @@
-\def\lecture{6}
+\def\lecture{7}
 \clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
 \hline \vskip -2mm
-{\sf 编译原理} \hfill September 16, 2011 \\
+{\sf 编译原理} \hfill September 21, 2011 \\
 {\centering \sf \large Lecture \lecture:
-词法分析器和上下文无关文法 \\ }
+语法树,二义性和语法分析 \\ }
 \textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
 \end{tabularx}
 \setcounter{section}{0}
 \renewcommand{\thepage}{\lecture -\arabic{page}}
 
+\section{上下文无关文法 (cont.)}
+
+    \subsection{语法树和二义性}
+
+        \textsf{语法树}是为了理解句子的语法, 得到句子如何从开始符号推导得到, 因此引入的图形. 它是句型推导的图形表示. 树的内节点对应非终结符号, 叶子对应非终结符号(句型)或者终结符号. 不同推导过程得到相同的语法树; 有时根据应用规则不同得到不同的语法树, 此时称文法$G$为\textsf{二义的}. 文法的二义性是不可判定的.
+
+        解决二义性: 重写语法$G_0:E\to E+E|E*E|(E)|id$为$G_1:E\to E+T|T, T\to T+F|F, F\to(E)|id$, 没有机械的方法.
+
+        上下文无关文法有如下限制:
+
+        \begin{enumerate}
+            \item $G$不会产生$P\to P$
+            \item $\forall P\in V_N$, 必须都有用处, 即
+                \begin{itemize}
+                    \item $\exists S\stackrel{*}{\Rightarrow} \alpha P\beta$, $P$在句型中出现
+                    \item $\exists \gamma\in V_T^*, P\stackrel{+}{\Rightarrow}\gamma$, 即对$P$不存在不终结的回路.
+                \end{itemize}
+        \end{enumerate}
+
+\section{自上而下的语法分析}
+
+    语法分析的任务: $\forall w\in V_T^*$, 判断$w\in L(G)$. 语法分析器是一个程序, 按照$P$做识别$w$的工作.
+
+    \subsection{自上而下分析面临的问题}
+
+        主旨: 从文法开始符号出发, 自上而下为输入串建立一棵语法树. 
+
+        语法树的构建需要回溯(因为都是确定机, 毕竟不是神机).
+
+        左匹配遇到\textsf{左递归}的文法: $P\stackrel{+}{\Rightarrow}P\alpha, P\in V_N$会陷入无限循环.
