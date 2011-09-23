@@ -226,10 +226,40 @@
     \subsection{字典序法}
 
         \begin{definition}[字典序]
-            设$(\Sigma,\leqslant)$是一全序集. 其中: $\Sigma$是一有限集, 称为\textsf{字母表}, 任一元素$a\in\Sigma$称为\textsf{字母}, $\leqslant$是字母表中字母的\textsf{自然顺序}, 则显然$\leqslant$是一个\textsf{全序}. 故此,则$(\Sigma^*,\leqslant^*)$是一\textsf{全序集},我们称其为\textsf{字典序}. 
+            设$(\Sigma,\leqslant)$是一全序集. 其中: $\Sigma$是一有限集, 称为\textsf{字母表}, 任一元素$a\in\Sigma$称为\textsf{字母}, $\leqslant$是字母表中字母的\textsf{自然顺序}, 则显然$\leqslant$是一个\textsf{全序}. 故此,则$(\Sigma^*,\leqslant^*)$是一\textsf{全序集},我们称其为\textsf{字典序}. 其中$\Sigma^*=\{\wedge\}\cup\Sigma\cup\Sigma^2\cup\Sigma^3\cup\cdots\cup\Sigma^n\cup\cdots$, $\wedge$称为空字, 其任何元素$w\in\Sigma^*$称为一个字, 必有$k\in\mathbb{N}$, 使得$w\in\Sigma^k$, 从而$w=(a_{i1},a_{i2},a_{i3},\cdots,a_{ik})=a_{i1}a_{i2}a_{i3}\cdots a_{ik}$, 这里$a_{ij}\in\Sigma$, $1\leqslant j\leqslant k$.
         \end{definition}
 
+        \subsubsection{生成给定全排列的下一个排列}
+
+            所谓一个的下一个就是这一个与下一个之间没有其它的. 这就要求这一个与下一个有尽可能长的共同前缀, 也即变化限制在尽可能短的后缀上. 
+            
+            \begin{algorithm}[在字典序中求一个排列的下一个排列]
+                 一般而言, 设$P$是$[1,n]$的一个全排列. 
+                 \begin{enumerate}
+                     \item $P=P_1P_2\cdots P_n=P_1P_2\cdots P_{j-1}P_{j}P_{j+1}\cdots P_{k-1}P_kP_{k+1}\cdots P_n$, 这里$j=\max\{i|P_i<P_i+1\}, k=\max\{i|P_i>P_j\}$;
+                     \item 对换$P_j$, $P_k$得到$Q'=P_1P_2\cdots P_{j-1}P_kP_{j+1}\cdots P_{k-1}P_jP_{k+1}\cdots P_n$;
+                     \item 将$P_{j+1}\cdots P_{k-1}P_jP_{k+1}\cdots P_n$翻转得到$Q=P_1P_2\cdots P_{j-1}P_kP_n\cdots P_{k+1}P_jP_{k-1}\cdots P_{j+1}$.
+                 \end{enumerate}
+             \end{algorithm}
+
+             \begin{definition}[字典序中中介数和序号]
+                 \begin{enumerate}
+                     \item 排列$P=P_1P_2\cdots P_n$的\textsf{中介数}为$(k_1,k_2,\cdots,k_{n-1})=k_1k_2\cdots k_{n-1}$, 这里$k_i$表示$P_i$的右边比$P_i$的数的个数$(1\leqslant i\leqslant n)$;
+                     \item 排列$P=P_1P_2\cdots P_n$的\textsf{序号}可表示为
+                         \begin{flalign*}
+                             m&=m(P)=k_1(n-1)!+k_2(n-2)!+\cdots+k_{n-1}\cdot 1! \\
+                              &=\sum_{i=1}^{n-1}k_i(n-i)!
+                          \end{flalign*}
+                  \end{enumerate}
+              \end{definition}
+
+
+
+
+
     \subsection{递增进位制数法}
+
+        
 
     \subsection{递减进位制数法}
 
