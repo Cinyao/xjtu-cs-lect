@@ -3,4 +3,94 @@
 % licensed under cc by-sa 3.0
 \chapter{排列与组合}
 
+\section*{课前思考}
 
+    \begin{enumerate}
+        \item 2个互异的球放入3个互异的盒子, 每个盒子至多一个球, 有多少方案? 
+        \item 2个互异的球放入3个互异的盒子, 每个盒子球数不限, 有多少方案? 
+        \item 2个相同的球放入3个互异的盒子, 每个盒子至多一个球, 有多少方案? 
+        \item 3个人围成一圈, 有多少方案? 
+        \item 3颗不同的珠子串成一串项链, 有多少方案? 
+        \item 5个人(每人都会开车)分乘2辆小轿车(每车4座), 有多少方案? 
+    \end{enumerate}
+
+\section{加法原理与乘法原理}
+
+    \paragraph{加法原理}
+        
+        设事件$A_1$有$m_1$种产生方式, 事件$A_2$有$m_2$种产生方式, \ldots, 事件$A_n$有$m_n$种产生方式, 则事件$A_1$或$A_2$或$\ldots$或$A_n$之一有$m_1+m_2+\cdots+m_n$种产生方式.
+
+        \subparagraph{集合论语言}
+
+            若$|A_1|=m_1, |A_2|=m_2, \cdots, |A_n|=m_n$, 并且$A_i\cap A_j=\emptyset(1\leqslant i\neq j\leqslant n)$, 则$|A_1\cup A_2\cup\cdots\cup A_n|=m_1+m_2+\cdots+m_n$.
+
+    \paragraph{乘法原理}
+
+        设事件$A_1$有$m_1$种产生方式, 事件$A_2$有$m_2$种产生方式, \ldots, 事件$A_n$有$m_n$种产生方式, 则事件$A_1$与$A_2$与$\ldots$与$A_n$之一有$m_1\times m_2\times \cdots\times m_n$种产生方式.
+
+        \subparagraph{集合论语言}
+
+            若$|A_1|=m_1, |A_2|=m_2, \cdots, |A_n|=m_n$, 并且$A_1\times A_2\times \cdots \times A_n=\{(a_1,a_2,\cdots,a_n)|a_i\in A_i(1\leqslant i\leqslant n)\}$, 则$|A_1\times A_2\times\cdots\times A_n|=m_1+m_2+\cdots+m_n$.
+
+\section{排列与组合}
+
+    \subsection{无重排列}
+
+        \begin{definition}[无重排列]
+            从$n$个不同的元素中, 取$r$个不重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{(无重)排列}. 这些排列的全体组成的集合用$P(n,r)$表示. 排列的个数用$P(n,r)$表示. 当$r=n$时, 称为\textsf{全排列}. 一个排列也可看作一个字符串, $r$也称为排列或字符串的长度. 
+        \end{definition}
+
+        \begin{caution}
+            一般没说可重复意即无重复
+        \end{caution}
+
+        \begin{theorem}
+            $P(n,r)=n(n-1)\cdots(n-r+1)=\frac{n!}{(n-r)!}$
+        \end{theorem}
+
+    \subsection{无重组合}
+
+        \begin{definition}[无重组合]
+            从$n$个不同元素中, 取$r$个不重复的元素, 不考虑其次序, 构成一个子集, 称为从$n$个元中取$r$个元的\textsf{(无重)组合}. 这些组合的全体组成的集合用$\mathbf{C(n,r)}$表示, 组合的个数用$C(n,r)$或$n\choose r$表示.
+        \end{definition}
+        \begin{theorem}
+            $C(n,r)=\frac{n!}{r!(n-r)!}$
+        \end{theorem}
+
+        \subparagraph{组合模型}
+
+            组合的计数相当于将$r$个相同的球放入$n$个不同的盒子里, 每盒最多1个球的方案数.
+
+    \subsection{可重排列}
+
+        \begin{definition}[可重排列]
+            从$n$个不同的元素中, 取$r$个可重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{可重排列}. 这些排列的全体组成的集合, 用$\mathbf{\overline{P}(n,r)}$表示.  排列的个数用$\overline{P}(n,r)$表示
+        \end{definition}
+
+        \begin{theorem}
+            $\overline{P}(n,r)=n^r$
+        \end{theorem}
+
+        \begin{definition}[多重排列]
+            将$r_1$个$x_1$, $r_2$个$x_2$,\ldots, $r_k$个$x_k$按次序排成一列, 称为一个$(r_1,r_2,\cdots,r_k)$\textsf{多重排列}. 设$\sum_{i=1}^kr_i=n$, 这些排列的全体组成的集合, 表示为$P(n,x_1,x_2,\cdots,x_k)$. 这些排列的个数用$n\choose{r_1,r_2,\cdots,r_k}$表示. 
+        \end{definition}
+
+        \begin{theorem}
+            ${n\choose{r_1,r_2,\cdots,r_k}}=\frac{n!}{r_1!r_2!\cdots r_k!}$
+        \end{theorem}
+
+        \subparagraph{组合模型}
+
+            $r_1$个$x_1$, $r_2$个$x_2$, \ldots, $r_k$个$x_k$排列的个数相当于$n$个不同的球放入$k$个不同的盒子里, 其中 $r_1$个球放入盒子$x_1$中, \ldots, $r_k$个球放入盒子$x_k$中的方案数(合子中的球不计次序). 
+
+    \subsection{多项式系数}
+
+        \begin{definition}[多项式系数]
+            多项式的展开式是$n$次对称多项式:
+            \[(x_1+x_2+\cdots+x_k)^n=\sum_{r_1+r_2+\ldots+r_k=n}\mathrm{C}_{r_1,r_2,\ldots,r_k}x_1^{r_1}x_2^{r_2}\cdots x_k^{r_k}\]
+            此展开式中任意一项$\mathrm{C}_{r_1,r_2,\ldots,r_k}x_1^{r_1}x_2^{r_2}\cdots x_k^{r_k}$前面的$\mathrm{C}_{r_1,r_2,\ldots,r_k}$的值称为\textsf{多项式系数}.
+        \end{definition}
+
+        \begin{theorem}\rm
+            $\mathrm{C}_{r_1,r_2,\ldots,r_k}={n\choose r_1,r_2,\ldots,r_k}$, 其中$\sum_{i=1}^kr_i=n$
+        \end{theorem}
