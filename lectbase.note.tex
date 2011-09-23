@@ -23,6 +23,9 @@
 {-3.25ex\@plus -1ex \@minus -.2ex}{1.5ex \@plus .2ex}%
 {\normalfont \large \sf}}
 \renewcommand\subsubsection{\@startsection {subsubsection}{3}{\z@ }{-3.25ex\@plus -1ex \@minus -.2ex}{1.5ex \@plus .2ex}{\normalfont \normalsize \sf }}
+\renewcommand\chapter{
+\if@openright \cleardoublepage \else \clearpage \fi \thispagestyle {plain}\global \@topnum \z@ \@afterindentfalse \secdef \@chapter \@schapter
+}
 \renewcommand\paragraph{
 \@startsection {paragraph}{4}{\z@ }{3.25ex \@plus 1ex \@minus .2ex}{-1em}{\normalfont \normalsize \sf }
 }
