@@ -44,7 +44,7 @@
     \subsection{无重排列}
 
         \begin{definition}[无重排列]
-            从$n$个不同的元素中, 取$r$个不重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{(无重)排列}. 这些排列的全体组成的集合用$P(n,r)$表示. 排列的个数用$P(n,r)$表示. 当$r=n$时, 称为\textsf{全排列}. 一个排列也可看作一个字符串, $r$也称为排列或字符串的长度. 
+            从$n$个不同的元素中, 取$r$个不重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{(无重)排列}. 这些排列的全体组成的集合用$\mathbf{P(n,r)}$表示. 排列的个数用$P(n,r)$表示. 当$r=n$时, 称为\textsf{全排列}. 一个排列也可看作一个字符串, $r$也称为排列或字符串的长度. 
         \end{definition}
 
         \begin{caution}
@@ -68,6 +68,10 @@
 
             组合的计数相当于将$r$个相同的球放入$n$个不同的盒子里, 每盒最多1个球的方案数.
 
+        \begin{prop}
+            ${n\choose r}={n\choose n-r}=\frac{n!}{r!(n-r)!}$, $\C^n_r=\C^{n-1}_r+\C^{n-1}_{r-1}$
+        \end{prop}
+
     \subsection{可重排列}
 
         \begin{definition}[可重排列]
@@ -79,7 +83,7 @@
         \end{theorem}
 
         \begin{definition}[多重排列]
-            将$r_1$个$x_1$, $r_2$个$x_2$,\ldots, $r_k$个$x_k$按次序排成一列, 称为一个$(r_1,r_2,\cdots,r_k)$\textsf{多重排列}. 设$\sum_{i=1}^kr_i=n$, 这些排列的全体组成的集合, 表示为$P(n,x_1,x_2,\cdots,x_k)$. 这些排列的个数用$n\choose{r_1,r_2,\cdots,r_k}$表示. 
+            将$r_1$个$x_1$, $r_2$个$x_2$,\ldots, $r_k$个$x_k$按次序排成一列, 称为一个$(r_1,r_2,\cdots,r_k)$\textsf{多重排列}. 设$\sum_{i=1}^kr_i=n$, 这些排列的全体组成的集合, 表示为$\mathbf{\overline P(n,x_1,x_2,\cdots,x_k)}$. 这些排列的个数用$n\choose{r_1,r_2,\cdots,r_k}$表示. 
         \end{definition}
 
         \begin{theorem}
@@ -105,15 +109,15 @@
     \subsection{圆排列和项链排列}
 
         \begin{definition}[圆排列]
-            如若将一个排列的首尾相连, 布列在一个圆周上, 则称其为一个\textsf{圆排列}. 若两个圆排列不离开平面, 通过旋转和平移就能够重合, 则看做是同一个圆排列. 由$r$个字符构成的圆排列可在$r$处做顺时针断开.
+            如若将一个排列的首尾相连, 布列在一个圆周上, 则称其为一个\textsf{圆排列}. 若两个圆排列不离开平面, 通过\textbf{旋转}和\textbf{平移}就能够重合, 则看做是同一个圆排列. 由$r$个字符构成的圆排列可在$r$处做顺时针断开.
         \end{definition}
 
         \begin{definition}[项链排列]
-            \textsf{项链排列}是圆排列. 一般而言, 若两个项链排列通过旋转, 平移和翻转就能够重合, 则看做是同一个项链排列. 
+            \textsf{项链排列}是圆排列. 一般而言, 若两个项链排列通过旋转, 平移和\textbf{翻转}就能够重合, 则看做是同一个项链排列. 
         \end{definition}
 
         \begin{theorem}\rm
-            从$n$个字符中取$r$个不同的字符构成\textbf{圆排列}的个数为$P(n,r)/r$ ($0\leqslant r\leqslant n$).
+            从$n$个字符中取$r$个不同的字符构成\textbf{圆排列}的个数为$Q^n_r=P(n,r)/r$ ($0\leqslant r\leqslant n$).
 
             从$n$个字符中取$r$个不同的字符构成\textbf{项链排列}的个数为$P(n,r)/2r$ ($3\leqslant r\leqslant n$).
         \end{theorem}
@@ -154,7 +158,7 @@
 
 \section{Stirling近似公式}
 
-    Stirling公式给出一个求$n!$的近似公式, 它对从事计算和理论分析都是有意义的. 
+    \textsf{Stirling公式}给出一个求$n!$的近似公式, 它对从事计算和理论分析都是有意义的. 
 
     \paragraph{Wallis公式}
 
@@ -162,7 +166,7 @@
 
     \paragraph{Stirling公式}
 
-        \[n!\approx\sqrt{2\pi n}({n\over e})^n\]
+        \[n!\sim\sqrt{2\pi n}({n\over \e})^n\]
 
 \section{模型转换--一一对应技术}
 
@@ -223,8 +227,9 @@
     \end{example}
 
     \begin{theorem}[Cayley定理] \rm
-        $n$个有标号的顶点的树的数目等于$n^{n-2}$.
+        $n$个有标号$1,2,\cdots,n$的顶点的树的数目等于$n^{n-2}$.
     \end{theorem}
+    该定理说明, 用$n-1$条边将$1,2,\cdots,n$点链接起来的连通图的数目为$n^{n-2}$.
 
 
 \section{全排列的生成算法}
@@ -468,3 +473,54 @@
         \begin{example}
             求长度为9的全排列839647521的下一个排列及其中介数(10121372). 
         \end{example}
+    
+\section{组合的生成}
+
+    \begin{algorithm}
+        [求一个组合的下一个组合的算法]
+        从$[1,n]$中取$r$个元的组合全体是$\C(n,r)$. 设$\C=c_1c_2\cdots c_r\in\C(n,r)$是一元的组合. 不妨设$c_1<c_2<\cdots<c_r$, $i\leqslant c_i\leqslant(n-r+i)$, $i=1,2,\leqslant,r$. 令$j=\max\{i|c_i<n-r+i\}$, 则$c_1c_2\cdots c_r$的下一个组合为$C'=c_1c_2\cdots c_{j-1}(c_j+1)(c_j+2)\cdots(c_j+r-j+1)$.
+        \begin{note}
+            这等于给C(n,r)的元素建立了字典序.
+        \end{note}
+    \end{algorithm}
+
+    \begin{example}
+        用两种方法计算$[1,n]$的无重不相邻组合$C'(n,r)$的计数问题.
+
+        $C'(n,r)={n-r\choose r-1}+{n-r\choose r}={n-r+1\choose r}$
+    \end{example}
+
+\section{可重组合}
+
+    如果一个组合里的元素允许重复出现, 应当怎样计数呢?
+
+    \subparagraph{思考题}
+        从a,b,c这3个元素中取2个元素的可重复的组合有多少个? (${4\choose2}=6$)
+
+    \begin{definition}
+        [可重组合]
+        从$n$个不同的元素中取$r$个可重复的元素, 称为从$n$个元中取$r$个元的\textsf{可重组合}. 这些组合的全体组成的集合用$\mathbf{\overline{C}(n,r)}$表示. 可重组合的个数用$\overline C(n,r)$表示. 为了方便起见, 上述$n$个不同的元素就取$[1,n]$中的整数. 
+    \end{definition}
+
+    \begin{theorem}
+        $\overline \C(n,r)={n+r-1\choose r}$
+    \end{theorem}
+
+\section{若干等式及其组合意义}
+
+    \begin{enumerate}
+        \item $\C^n_r=\C^n_{n-r}$
+        \item ${n\choose k}=\frac nk{n-1\choose k-1}$
+        \item ${n\choose k}=\frac{n-k+1}k{n\choose k-1}$
+        \item ${n\choose k}=\frac n{n-k}{n-1\choose k}$
+        \item $\C^n_r=\C^{n-1}_r+\C^{n-1}_{r-1}$
+        \item ${n\choose n}+{n+1\choose n}+{n+2\choose n}+\cdots+{n+r\choose n}={n+r+1\choose n+1}$
+        \item ${n\choose l}{l\choose r}={n\choose r}{n-l\choose l-r}$
+        \item ${m\choose0}+{m\choose 1}+\cdots+{m\choose m}=2^m, m\geqslant0$
+        \item ${n\choose0}-{n\choose1}+{n\choose2}-\cdots+(-1)^n{n\choose n}=0$
+        \item ${m+n\choose r}={m\choose0}{n\choose r}+{m\choose1}{n\choose r-1}+\cdots+{m\choose r}{n\choose 0}$ Vandermonde恒等式 \\
+        $\sum_{j\geqslant0}{k\choose j}{l\choose j}{n+k+l-j\choose k+l}={n+k\choose k}{n+l\choose l}$ 李善兰恒等式
+        \item ${m+n\choose m}={m\choose0}{n\choose0}+{m\choose1}{n\choose1}+\cdots+{m\choose m}{n\choose m}$
+        \item $\P(n,r)=n\P(n-1,r-1)$
+        \item $\P(n,r)=\P(n-1,r)+r\P(n-1,r-1)$
+    \end{enumerate}
