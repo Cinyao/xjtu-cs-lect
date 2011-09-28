@@ -1,0 +1,76 @@
+\def\lecture{8}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 23, 2011 \\
+{\centering \sf \large Lecture \lecture:
+自上而下的语法分析 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{自上而下的语法分析}
+
+    \subsection{自上而下分析面临的问题}
+
+        主旨: 从文法开始符号出发, 自上而下为输入串建立一棵语法树. 
+
+        语法树的构建需要回溯(因为都是确定机, 毕竟不是神机).
+
+        左匹配遇到\textsf{左递归}的文法: $P\stackrel{+}{\Rightarrow}P\alpha, P\in V_N$会陷入无限循环.
+
+        \subsubsection{消除文法的左递归}
+        
+            \textsf{左递归}的分类: 直接左递归 $N\to N\alpha$, 间接左递归$N\to A\alpha, A\to B\beta, B\to N\gamma$, 潜在左递归$N\to\alpha N, \alpha\stackrel{+}{\Rightarrow}\varepsilon$.
+
+            \paragraph{直接左递归的消除}
+
+                候选式 $A\to A\alpha|\beta$: $\beta$, $\beta\alpha$, $\beta\alpha\alpha$, \ldots
+
+                替换为 $A\to\beta A', A'\to\alpha A'|\varepsilon$
+
+            \paragraph{消除间接和潜在的左递归}
+
+                \subparagraph{代入法}
+
+                    将一个产生式规则右部的$\alpha$中的非终结符$N$替换为$N$的候选式. 如果$N$有$n$个候选式, 右边的$\alpha$重复$n$词, 而且每一次重复都有$N$的不同候选式来代替$N$.
+
+                    示例: $N\to a|Bc|\varepsilon$在$S\to pNq$中的代入结果为$S\to paq|pBcq|pq$
+
+                \subparagraph{算法}
+
+                    \begin{enumerate}
+                        \item 对文法$G$的所有非终结符进行排序
+                        \item 按上述顺序对每一个非终结符$P_i$依次执行
+                                \texttt{for(j=1;j<i-1;j++)}
+                                将$P_j$代入$P_i$的产生式(若可代入);
+                        \item 消除关于$P_i$的直接左递归;
+                        \item 化简上述所得文法.
+                    \end{enumerate}
+
+        \subsubsection{克服回溯}
+
+            用神机来匹配文法是最简单的解决方案.
+
+            \paragraph{产生回溯的原因}
+
+                匹配失败: 有多个$\alpha_i$以$a$开头, 文法的责任.
+
+            定义FIRST$(\alpha)=\{a|\alpha\stackrel{*}{\Rightarrow}a\cdots, a\in V_T\}$, 若$\alpha\stackrel{*}{\Rightarrow}\varepsilon$, 规定$\varepsilon\in$FIRST$(\alpha)$. 要求对于$\forall a\in$FIRST$(\alpha_i)$, 则$a\not\in$FIRST$(\alpha_j), j\neq i$.
+
+            \paragraph{不回溯的条件}
+
+                非终结符$A$的所有候选式的首符号($V_N$, 非终结符号)集合两两不相交.
+
+                \subparagraph{方法} \textsf{提取公共左因子}
+                    若$A\to\delta\beta_1|\delta\beta_2|\cdots|\delta\beta_n|\gamma_1|\gamma_2|\cdots|\gamma_m$, 其中每个$\gamma$不以$\delta$开头. 那么可以将这些规则改写成$A\to\delta A'|\gamma_1|\gamma_2|\cdots|\gamma_m, A'\to\beta_1|\beta_2|\cdots|\beta_n$.
+
+    \subsection{递归下降分析程序构造}
+
+        最简单的情形, 要求不包含左递归且不会回溯. 
+
+    \subsection{预测分析程序}
+
+        \subsubsection{工作过程}
+
+            预测分析表$M$, 总控程序, 栈
