@@ -44,7 +44,7 @@
     \subsection{无重排列}
 
         \begin{definition}[无重排列]
-            从$n$个不同的元素中, 取$r$个不重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{(无重)排列}. 这些排列的全体组成的集合用$\mathbf{P(n,r)}$表示. 排列的个数用$P(n,r)$表示. 当$r=n$时, 称为\textsf{全排列}. 一个排列也可看作一个字符串, $r$也称为排列或字符串的长度. 
+            从$n$个不同的元素中, 取$r$个不重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{(无重)排列}. 这些排列的全体组成的集合用$\mathbf{\P(n,r)}$表示. 排列的个数用$\P(n,r)$表示. 当$r=n$时, 称为\textsf{全排列}. 一个排列也可看作一个字符串, $r$也称为排列或字符串的长度. 
         \end{definition}
 
         \begin{caution}
@@ -52,16 +52,16 @@
         \end{caution}
 
         \begin{theorem}
-            $P(n,r)=n(n-1)\cdots(n-r+1)=\frac{n!}{(n-r)!}$
+            $\P(n,r)=n(n-1)\cdots(n-r+1)=\frac{n!}{(n-r)!}$
         \end{theorem}
 
     \subsection{无重组合}
 
         \begin{definition}[无重组合]
-            从$n$个不同元素中, 取$r$个不重复的元素, 不考虑其次序, 构成一个子集, 称为从$n$个元中取$r$个元的\textsf{(无重)组合}. 这些组合的全体组成的集合用$\mathbf{C(n,r)}$表示, 组合的个数用$C(n,r)$或$n\choose r$表示.
+            从$n$个不同元素中, 取$r$个不重复的元素, 不考虑其次序, 构成一个子集, 称为从$n$个元中取$r$个元的\textsf{(无重)组合}. 这些组合的全体组成的集合用$\mathbf{\C(n,r)}$表示, 组合的个数用$\C(n,r)$或$n\choose r$表示.
         \end{definition}
         \begin{theorem}
-            $C(n,r)=\frac{n!}{r!(n-r)!}$
+            $\C(n,r)=\frac{n!}{r!(n-r)!}$
         \end{theorem}
 
         \subparagraph{组合模型}
@@ -75,15 +75,15 @@
     \subsection{可重排列}
 
         \begin{definition}[可重排列]
-            从$n$个不同的元素中, 取$r$个可重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{可重排列}. 这些排列的全体组成的集合, 用$\mathbf{\overline{P}(n,r)}$表示.  排列的个数用$\overline{P}(n,r)$表示
+            从$n$个不同的元素中, 取$r$个可重复的元素, 按次序排成一列, 称为从$n$个元中取$r$个元的\textsf{可重排列}. 这些排列的全体组成的集合, 用$\mathbf{\overline{\P}(n,r)}$表示.  排列的个数用$\overline{\P}(n,r)$表示
         \end{definition}
 
         \begin{theorem}
-            $\overline{P}(n,r)=n^r$
+            $\overline{\P}(n,r)=n^r$
         \end{theorem}
 
         \begin{definition}[多重排列]
-            将$r_1$个$x_1$, $r_2$个$x_2$,\ldots, $r_k$个$x_k$按次序排成一列, 称为一个$(r_1,r_2,\cdots,r_k)$\textsf{多重排列}. 设$\sum_{i=1}^kr_i=n$, 这些排列的全体组成的集合, 表示为$\mathbf{\overline P(n,x_1,x_2,\cdots,x_k)}$. 这些排列的个数用$n\choose{r_1,r_2,\cdots,r_k}$表示. 
+            将$r_1$个$x_1$, $r_2$个$x_2$,\ldots, $r_k$个$x_k$按次序排成一列, 称为一个$(r_1,r_2,\cdots,r_k)$\textsf{多重排列}. 设$\sum_{i=1}^kr_i=n$, 这些排列的全体组成的集合, 表示为$\mathbf{\overline \P(n,x_1,x_2,\cdots,x_k)}$. 这些排列的个数用$n\choose{r_1,r_2,\cdots,r_k}$表示. 
         \end{definition}
 
         \begin{theorem}
@@ -117,9 +117,9 @@
         \end{definition}
 
         \begin{theorem}\rm
-            从$n$个字符中取$r$个不同的字符构成\textbf{圆排列}的个数为$Q^n_r=P(n,r)/r$ ($0\leqslant r\leqslant n$).
+            从$n$个字符中取$r$个不同的字符构成\textbf{圆排列}的个数为$Q^n_r=\P(n,r)/r$ ($0\leqslant r\leqslant n$).
 
-            从$n$个字符中取$r$个不同的字符构成\textbf{项链排列}的个数为$P(n,r)/2r$ ($3\leqslant r\leqslant n$).
+            从$n$个字符中取$r$个不同的字符构成\textbf{项链排列}的个数为$\P(n,r)/2r$ ($3\leqslant r\leqslant n$).
         \end{theorem}
 
         关于可重的圆排列和项链排列, 我们将在讨论Mobius反演及P\`olya定理时涉及.
@@ -480,7 +480,7 @@
         [求一个组合的下一个组合的算法]
         从$[1,n]$中取$r$个元的组合全体是$\C(n,r)$. 设$\C=c_1c_2\cdots c_r\in\C(n,r)$是一元的组合. 不妨设$c_1<c_2<\cdots<c_r$, $i\leqslant c_i\leqslant(n-r+i)$, $i=1,2,\leqslant,r$. 令$j=\max\{i|c_i<n-r+i\}$, 则$c_1c_2\cdots c_r$的下一个组合为$C'=c_1c_2\cdots c_{j-1}(c_j+1)(c_j+2)\cdots(c_j+r-j+1)$.
         \begin{note}
-            这等于给C(n,r)的元素建立了字典序.
+            这等于给$\C(n,r)$的元素建立了字典序.
         \end{note}
     \end{algorithm}
 
@@ -499,7 +499,7 @@
 
     \begin{definition}
         [可重组合]
-        从$n$个不同的元素中取$r$个可重复的元素, 称为从$n$个元中取$r$个元的\textsf{可重组合}. 这些组合的全体组成的集合用$\mathbf{\overline{C}(n,r)}$表示. 可重组合的个数用$\overline C(n,r)$表示. 为了方便起见, 上述$n$个不同的元素就取$[1,n]$中的整数. 
+        从$n$个不同的元素中取$r$个可重复的元素, 称为从$n$个元中取$r$个元的\textsf{可重组合}. 这些组合的全体组成的集合用$\mathbf{\overline{C}(n,r)}$表示. 可重组合的个数用$\overline \C(n,r)$表示. 为了方便起见, 上述$n$个不同的元素就取$[1,n]$中的整数. 
     \end{definition}
 
     \begin{theorem}
