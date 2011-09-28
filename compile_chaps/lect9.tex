@@ -1,0 +1,76 @@
+\def\lecture{9}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 28, 2011 \\
+{\centering \sf \large Lecture \lecture:
+预测分析程序 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{自上而下的语法分析}
+
+    \subsection{递归下降分析程序构造}
+
+        最简单的情形, 要求不包含左递归且不会回溯. 
+
+    \subsection{预测分析程序}
+
+        与状态转化矩阵对比: 及早发现错误, 缩减状态转化.
+
+        \subsubsection{模型}
+
+            \begin{description}
+                \item[输入] 含有要分析的串, 以\#结尾
+                \item[栈] 以\#为栈底, 栈内是一系列文法符号. 开始时, \#和$S$分别进栈
+                \item[预测分析表] $V_N\times V_T$, 可以表示为$M[A,a], A\in V_N,a\in V_T$. 一般是压缩过的. \\
+                    元素形式为$\{X\to UVW\}$, 也可以是error.
+                \item[总控程序]
+                \item[输出] 根据分析表内元素规定的语义动作
+            \end{description}
+
+
+        \subsubsection{工作过程}
+
+            栈顶元素$X$和当前输入符号$a$决定一个\textsf{状态}, $(X,a)$决定程序的动作:
+            \begin{itemize}
+                \item $X=a=\#$, 分析完成
+                \item $X=a\not =\#$, 弹栈, 后移输入指针
+                \item $X\in V_N$, 查分析表$M[X,a]$, 认为该元素为$X$的产生式, 或出错 \\
+                    先将$X$从栈顶弹出, 将$X$的产生式\textbf{反序}压入栈.
+            \end{itemize}
+
+                \subparagraph{栈的实质} \underline{没有被匹配的}残缺的规范句型
+                
+                \subparagraph{表的实质} 根据碰到的$V_T$元素指出$V_N$按哪条规则扩充成什么
+
+            \paragraph{缺点} 大量采用选择, 发现错误较晚.
+
+        \subsubsection{如何产生预测分析表}
+
+            \paragraph{朴素方法} 循环机械填表(产生式/错误).
+
+            \paragraph{改进的方法} 将产生式分类, 找出产生式的规律:
+                \begin{itemize}
+                    \item 右部不是$\varepsilon$: $\alpha\stackrel{*}{\Rightarrow}a\cdots$\\
+                        $A\to \alpha$, FIRST$(\alpha)=\{a_1,a_2\}$, 则可以填入$M[A,a_1]=M[A,a_2]=A\to\alpha$.
+                    \item 右部是$\varepsilon$ \\
+                        若一个符号``+''在句型中可以出现在$T'$的后面($a\in\mathrm{FOLLOW}(A)$), 则$T'$允许替换为$\varepsilon$
+                \end{itemize}
+
+                FIRST$(\alpha)=\{a|\alpha\stackrel{*}{\Rightarrow}a\cdots, a\in V_T\}$, 若$a\stackrel{*}{\Rightarrow}\varepsilon$, 规定$\varepsilon\in\mathrm{FIRST}(\alpha)$.
+
+                FOLLOW$(A)=\{a|S\stackrel{*}{\Rightarrow}\alpha Aa\beta, a\in V_T, \alpha, \beta\in V^*\}$
+
+                \subparagraph{构造FIRST$(\alpha)$}
+
+                    $\alpha=X_1X_2\cdots x_n$, 先构造FIRST$(X_i)$.
+
+                    % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO
+
+                    若$X\in V_T$, 则FIRST$(X)$是$\{X\}$. 若$X\in V_N$且$X\to a\alpha$, 则$\{a\}\cup \mathrm{FIRST}(X)$, 或$X\to \varepsilon$, 则$\{\varepsilon\}\cup \mathrm{FIRST}(X)$. 若$X\in V_N, X\to Y,\cdots, Y\in V_N$, 则FIRST$(Y)\backslash\{\varepsilon\}\cup \mathrm{FIRST(X)}$.
+
+                \subparagraph{再构造FIRST$(X_1X_2\cdots X_n)$}
+
+                \subparagraph{构造FOLLOW$(A)$}
