@@ -1,0 +1,156 @@
+\chapter{自上而下的语法分析}
+
+    语法分析的任务: $\forall w\in V_T^*$, 判断$w\in L(G)$. 语法分析器是一个程序, 按照$\mathcal{P}$做识别$w$的工作.
+
+    主旨: 从文法开始符号出发, 自上而下为输入串建立一棵语法树. 
+
+    \section{自上而下分析面临的问题}
+
+        语法树的构建需要回溯(因为都是确定机, 不是神机). 开始时一无所知, 只能通过猜测的方法来匹配规则, parsing变为图搜索的过程.
+
+        左匹配(最左深搜)遇到\textsf{左递归}的文法: $P\stackrel{+}{\Rightarrow}P\alpha, P\in V_N$会陷入无限循环. 最左宽搜遇到左递归文法会消耗指数级时间和空间, 实践中很少使用.
+
+        难以报告出错的确切位置, 穷举效率低下.
+
+        \subsection{消除文法的左递归}
+        
+            \textsf{左递归}的分类: 直接左递归 $N\to N\alpha$, 间接左递归$N\to A\alpha, A\to B\beta, B\to N\gamma$, 潜在左递归$N\to\alpha N, \alpha\stackrel{+}{\Rightarrow}\varepsilon$.
+
+            \paragraph{直接左递归的消除}
+
+                候选式 $A\to A\alpha|\beta$: $\beta$, $\beta\alpha$, $\beta\alpha\alpha$, \ldots
+
+                替换为 $A\to\beta A', A'\to\alpha A'|\varepsilon$
+
+            \paragraph{消除间接和潜在的左递归}
+
+                \subparagraph{代入法}
+
+                    将一个产生式规则右部的$\alpha$中的非终结符$N$替换为$N$的候选式. 如果$N$有$n$个候选式, 右边的$\alpha$重复$n$词, 而且每一次重复都有$N$的不同候选式来代替$N$.
+
+                    示例: $N\to a|Bc|\varepsilon$在$S\to pNq$中的代入结果为$S\to paq|pBcq|pq$
+
+                \subparagraph{算法}
+
+                    \begin{enumerate}
+                        \item 对文法$G$的所有非终结符进行排序
+                        \item 按上述顺序对每一个非终结符$P_i$依次执行
+                                \texttt{for(j=1;j<i-1;j++)}
+                                将$P_j$代入$P_i$的产生式(若可代入);
+                        \item 消除关于$P_i$的直接左递归;
+                        \item 化简上述所得文法.
+                    \end{enumerate}
+
+        \subsection{克服回溯}
+
+            用神机\footnote{明神的电脑, 计算模型是非确定机}来匹配文法是最简单的解决方案.
+
+            \paragraph{产生回溯的原因}
+
+                匹配失败: 有多个$\alpha_i$以$a$开头, 文法的责任.
+
+            定义FIRST$(\alpha)=\{a|\alpha\stackrel{*}{\Rightarrow}a\cdots, a\in V_T\}$, 若$\alpha\stackrel{*}{\Rightarrow}\varepsilon$, 规定$\varepsilon\in$FIRST$(\alpha)$. 要求对于$\forall a\in$FIRST$(\alpha_i)$, 则$a\not\in$FIRST$(\alpha_j), j\neq i$.
+
+            \paragraph{不回溯的条件}
+
+                非终结符$A$的所有候选式的首符号($V_N$, 非终结符号)集合两两不相交.
+
+                \subparagraph{方法} \textsf{提取公共左因子}
+                    若$A\to\delta\beta_1|\delta\beta_2|\cdots|\delta\beta_n|\gamma_1|\gamma_2|\cdots|\gamma_m$, 其中每个$\gamma$不以$\delta$开头. 那么可以将这些规则改写成$A\to\delta A'|\gamma_1|\gamma_2|\cdots|\gamma_m, A'\to\beta_1|\beta_2|\cdots|\beta_n$.
+
+    \section{递归下降分析程序构造}
+
+        最简单的情形, 要求不包含左递归且不会回溯. 
+
+    \section{预测分析程序}
+
+        基于剩余输入, 预测使用产生式, 不回溯. 与状态转化矩阵对比: 及早发现错误, 缩减状态转化.
+
+            \subparagraph{特点} 快, 弱, 牺牲表达能力换取速度.
+
+        \subsection{模型}
+
+            \begin{description}
+                \item[输入] 含有要分析的串, 以\#结尾
+                \item[栈] 以\#为栈底, 栈内是一系列文法符号. 开始时, \#和$S$分别进栈
+                \item[预测分析表] $V_N\times V_T$, 可以表示为$M[A,a], A\in V_N,a\in V_T$. 一般是压缩过的. \\
+                    元素形式为$\{X\to UVW\}$, 也可以是error.
+                \item[总控程序]
+                \item[输出] 根据分析表内元素规定的语义动作
+            \end{description}
+
+        \subsection{工作过程}
+
+            栈顶元素$X$和当前输入符号$a$决定一个\textsf{状态}, $(X,a)$决定程序的动作:
+            \begin{itemize}
+                \item $X=a=\#$, 分析完成
+                \item $X=a\not =\#$, 弹栈, 后移输入指针
+                \item $X\in V_N$, 查分析表$M[X,a]$, 认为该元素为$X$的产生式, 或出错 \\
+                    先将$X$从栈顶弹出, 将$X$的产生式\textbf{反序}压入栈.
+            \end{itemize}
+
+                \subparagraph{栈的实质} \underline{没有被匹配的}残缺的规范句型
+                
+                \subparagraph{表的实质} 根据碰到的$V_T$元素指出$V_N$按哪条规则扩充成什么
+
+            \paragraph{缺点} 大量采用选择, 发现错误较晚.
+
+        \subsection{如何产生预测分析表}
+
+            \paragraph{朴素方法} 循环机械填表(产生式/错误).
+
+            \paragraph{改进的方法} 将产生式分类, 找出产生式的规律:
+                \begin{itemize}
+                    \item 右部不是$\varepsilon$: $\alpha\stackrel{*}{\Rightarrow}a\cdots$\\
+                        $A\to \alpha$, FIRST$(\alpha)=\{a_1,a_2\}$, 则可以填入$M[A,a_1]=M[A,a_2]=A\to\alpha$.
+                    \item 右部是$\varepsilon$ \\
+                        若一个符号``+''在句型中可以出现在$T'$的后面($a\in\mathrm{FOLLOW}(A)$), 则$T'$允许替换为$\varepsilon$
+                \end{itemize}
+
+                FIRST$(\alpha)=\{a|\alpha\stackrel{*}{\Rightarrow}a\cdots, a\in V_T\}$, 若$a\stackrel{*}{\Rightarrow}\varepsilon$, 规定$\varepsilon\in\mathrm{FIRST}(\alpha)$.
+
+                FOLLOW$(A)=\{a|S\stackrel{*}{\Rightarrow}\alpha Aa\beta, a\in V_T, \alpha, \beta\in V^*\}$
+
+                \subparagraph{构造FIRST$(\alpha)$}
+
+                    $\alpha=X_1X_2\cdots x_n$, 先构造FIRST$(X_i)$.
+
+                    若$X\in V_T$, 则FIRST$(X)$是$\{X\}$. 
+                    
+                    若$X\in V_N$且$X\to a\alpha$, 则$\{a\}\cup \mathrm{FIRST}(X)$, 或$X\to \varepsilon$, 则$\{\varepsilon\}\cup \mathrm{FIRST}(X)$. 
+                    
+                    若$X\in V_N, X\to Y,\cdots, Y\in V_N$, 则FIRST$(Y)\backslash\{\varepsilon\}\cup \mathrm{FIRST(X)}$.
+
+                \subparagraph{再构造FIRST$(X_1X_2\cdots X_n)$}
+
+                    \begin{enumerate}
+                        \item 将FIRST$(X_1)$的非$\varepsilon$终结符加入FIRST$(\alpha)$,
+                        \item 若$\varepsilon\in$FIRST$(X_1)$, 则将FIRST$(X_2)$的所有非$\varepsilon$终结符加入FIRST$(\alpha)$,
+                        \item 若$\varepsilon\in$FIRST$(X_1)$, $\varepsilon\in$FIRST$(X_2)$, 则将FIRST$(X_3)$的所有非$\varepsilon$终结符加入FIRST$(\alpha)$,
+                    \end{enumerate}
+                    若$\varepsilon\in$FIRST$(X_i), i=1\cdots n$则将$\{\varepsilon\}$加入FIRST$(\alpha)$.
+
+                \subparagraph{构造FOLLOW$(A)$}
+
+                    反复应用以下规则:
+
+                    \begin{enumerate}
+                        \item $\#\in\textrm{FOLLOW}(S)$
+                        \item $A\to \alpha B\beta\Rightarrow\textrm{FIRST}(\beta)\subset\textrm{FOLLOW}(B)$, 除$\varepsilon$
+                        \item $A\to \alpha B$或$A\to \alpha B\beta$且$\varepsilon\in\textrm{FIRST}(\beta)\Rightarrow\textrm{FOLLOW}(A)\subset\textrm{FOLLOW}(B)$
+                    \end{enumerate}
+
+    \section{LL(1)分析法}
+
+        \textsf{LL(1)分析法}: 从左到右扫描输入串, 最左推导, 分析时一步只向前查看一个符号.
+
+        \subsection{LL(1)文法的条件}
+
+            文法$G$是LL(1)的, 也就是说$\forall A\in V_N$的任何两个不同产生式$A\to \alpha|\beta$, 有
+            \begin{enumerate}
+                \item $\textrm{FIRST}(\alpha)\cap\textrm{FIRST}(\beta)=\emptyset$
+                \item $\beta\stackrel{*}{\Rightarrow}\varepsilon\Rightarrow\textrm{FIRST}(\alpha)\cap\textrm{FOLLOW}(A)=\emptyset$
+            \end{enumerate}
+
+            条件语句文法if-then不能改造成LL(1)文法. 对LL(1)做一些小修改, 则可以支持许多实用编程语言.
+

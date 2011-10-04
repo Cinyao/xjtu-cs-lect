@@ -9,3 +9,35 @@
         [(普)母函数]
         对于序列$a_0,a_1,a_2,\cdots,a_n,\cdots$构造一函数$G(x)=a_0+a_1x+a_2x^2+\cdots+a_nx^n\cdots$, 称函数$G(x)$是序列$a_0,a_1,a_2,\cdots,a_n,\cdots$上的\textsf{(普)母函数}.
     \end{definition}
+
+    \begin{definition}
+        [(形)母函数]
+        序列$a_0,a_1,a_2,\cdots,a_n,\cdots$, 其普母函数对应的\textsf{形母函数}是$1\over 1-ax$, 同时形式地有
+        \begin{flalign*}
+            {1\over 1-ax} &=1+ax+(ax)^2+\cdots+(ax^n)+\cdots \\
+                          &=a^0x^0+a^1x^1+a^2x^2+\cdots+a^nx^n+\cdots \\
+                          &=a_0+a_1x+a_2x^2+\cdots+a_nx^n+\cdots\\
+                          &=G(x)
+        \end{flalign*}
+    \end{definition}
+
+\section{递推关系}
+
+    \begin{definition}
+        [递推关系]
+        给定一个数序列$H(0),H(1),H(2),\cdots,H(n),\cdots$. 把$H(n)$和某些$H(i)(0\leqslant i<n)$联系起来的一个等式(方程)称为\textsf{递推关系}. 其中隐式表示: $f(H(n), H(0), H(1), \cdots, H(n-1))=0$;显式表示: $H(n)=g(H(0), H(1), \cdots, H(n-1))$.
+    \end{definition}
+
+    \begin{note}
+        隐式表示一般不好, 显式表示好.
+    \end{note}
+
+    \begin{theorem}
+        [牛顿二项式定理]\rm
+        对满足条件$|x/y|<1$的任意实数$x$,$y$及$\alpha$, 有\[(x+y)^\alpha=\sum_{k=0}^\infty{\alpha\choose k}x^{\alpha-k}y^k\]
+        其中${\alpha\choose k}=\frac{\alpha(\alpha-1)(\alpha-2)\cdots(\alpha-k+1)}{k!}$
+    \end{theorem}
+
+\section{母函数的性质}
+
+    

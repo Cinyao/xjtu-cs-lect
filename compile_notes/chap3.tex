@@ -1,0 +1,206 @@
+\chapter{词法分析}
+
+词法分析的任务: 扫描源程序, 产生单词符号, 将字符串源程序改造为中间程序.
+
+执行词法分析的程序称为\textbf{词法分析器/扫描器}.
+
+\section{词法分析器的要求}
+
+    \subsection{词法分析器的功能和输出形式}
+
+        \textbf{单词符号}: 一个程序语言的基本语法符号, 一般分为5种:
+
+        \begin{enumerate}
+            \item 关键字(保留字, reserved words)
+            \item 标识符(identifiers), 在确定的语言中, 数量是无限的
+            \item 常量(constants), 数量是无限的
+            \item 运算符(operators)
+            \item 界符(delimeter)
+        \end{enumerate}
+
+        输出形式: 二元组(单词类别, 单词自身), 为了确保二元组大小相等, ``单词自身''可以是指针.
+
+        \subsubsection{词法分析和语法分析的关系}
+
+            词法分析从语法分析中脱离出来的好处: 在这一步采用更简单的扫描方法.
+    
+\section{词法分析器的设计}
+
+    \subsection{输入和预处理}
+
+        \textbf{预处理}: 去除无用字符. 除了输入缓冲区之外, 还需要\textbf{扫描缓冲区}. 缓冲区的长度: 至少是标识符最大长度的两倍.
+
+    \subsection{单词符号识别}
+
+        一些语言对关键字不做特殊保护, 如Fortran, 识别关键字比较麻烦. 一种解决方案是``超前搜索'', 但会造成词法分析器实现困难. 一种更常用的解决方案是对用户进行限制, 如禁止将保留字作为标识符, 将空格等符号作为界符.
+
+    \subsection{状态转换图}
+
+        一个有限有向图, 节点代表状态. 功能: 识别一定的字符串. \textsf{初态}对应转换图的启动条件, \textsf{终态}对应转换图的结束条件. 其中*代表读入了一个字符.
+
+\section{正规式}
+
+    字母表$\Sigma$上的正规式可以定义为:
+
+    \begin{enumerate}
+        \item $\varepsilon$是一个正规式, 代表$\{\varepsilon\}$,
+        \item 若$a\in\Sigma$, 则$a$是正规式, 代表$\{a\}$,
+        \item 若$r$和$s$是正规式, 分别记为$L(r)$和$L(s)$, 则
+            \begin{enumerate}
+                \item $(r)$是正规式, 记作$L(r)$,
+                \item $(r)|(s)$是正规式, 记作$L(r)\cup L(s)$,
+                \item $(r)(s)$是正规式, 记作$L(r)L(s)$,
+                \item $(r)^*$是正规式, 记作$L(r)^*$.
+            \end{enumerate}
+    \end{enumerate}
+
+    运算顺序为闭包, 连接和合取. 
+
+    \subsection{确定有限自动机(DFA)}
+
+        DFA $M$=$(S,\Sigma,\delta,s_0,F)$, 其中$S$是状态集合, $\Sigma$是一个有穷字母表, $\delta$是从$S\times\Sigma\to S$的单值部分映射, 即后继状态表, $s_0\in S$是唯一的初态, $F\subset S$是可为空的终态集合.
+
+        DFA可用\textsf{状态转换矩阵}表示.
+
+        如果一个DFA $M$的输入字母表为$\Sigma$, 则$M$也是$\Sigma$上的一个DFA. 可以证明, $\Sigma$上的一个字集$V\subset\Sigma^*$是正规的$\iff \exists\Sigma$上的DFA $M$, 使得$V=L(M)$.
+
+        DFA的确定性表现在映射$\delta$: $S\times\Sigma\to S$是一个单值函数. 如果允许是多值函数, 就得到了非确定自动机的概念.
+
+
+    \subsection{非确定有限自动机(NFA)}
+        
+        正规式可以被轻易转换为NFA.
+
+        NFA与DFA定义的区别: $\delta$是一个从$S\times\Sigma^*$的子集的映射, 即$\delta: S\times\Sigma^*\to2^S$
+
+        表现在状态图上的区别: NFA允许接受$\varepsilon$或者多字母串作为单个输入. 
+
+        DFA是NFA的特例, 可以采用子集法将NFA确定化
+
+    \subsection{子集法确定闭包}
+
+        定义$\mathbf{I}$的$\varepsilon$-闭包($\varepsilon$-CLOSURE$(\mathbf{I})$):
+        \begin{enumerate}
+            \item 若$S\in \mathbf{I}$, 则$S\in \varepsilon$-CLOSURE$(\mathbf{I})$;
+            \item 若$S\in \mathbf{I}$, 则从$S$出发经过任意条$\varepsilon$弧能到达的任意状态$S'$都属于$\varepsilon$-CLOSURE$(\mathbf{I})$
+        \end{enumerate}
+
+        $\mathbf{I}_a$定义: $\mathbf{I}_a=\varepsilon$-CLOSURE$(\mathbf{J})$, 其中$\mathbf{J}$是可从$\mathbf{I}$中的某一状态节点出发经过一条$a$弧到达的状态节点的全体.
+
+    \subsubsection{NFA$\to$DFA: 子集算法}
+
+        核心思想: 让DFA模拟NFA. DFA的状态对应NFA的一系列状态, DFA的状态迁移对应NFA中一系列状态的迁移.
+
+        \begin{enumerate}
+            \item 构造初始化的表
+            \item 处理表的一行
+            \item 重复处理
+        \end{enumerate}
+
+        表的长度是有限的.
+
+        任何NFA都可以通过子集法变为对应的DFA, 但状态数可能达到指数级(空间换时间). 一种优化的做法是结合使用NFA和DFA.
+
+    \subsection{正规文法与有限自动机的等价性}
+
+        对于正规文法$G$和有限自动机$M$, 若$L(G)=L(M)$, 则称$G$和$M$是\textsf{等价}的.
+
+        \begin{enumerate}
+            \item $\forall\textrm{正规文法}G, \exists \textrm{有限自动机}M, L(M)=L(G)$,
+            \item $\forall\textrm{有限自动机}M, \exists \textrm{正规文法}G, L(M)=L(G)$,
+        \end{enumerate}
+
+        \subsubsection{并非所有文法都是正规的}
+
+            $L_1=\{p^kq^k\}$和$L_2=\{wcw^r|w\in\Sigma^*\}$都不是正规式, \textbf{DFA无法计数}.
+
+    \subsection{正规式和有限自动机的等价性}
+
+        \begin{enumerate}
+            \item $\forall\textrm{有限自动机}M,\exists\textrm{正规式}r, L(r)=L(G)$,
+            \item $\forall\textrm{正规式}r,\exists\textrm{有限自动机}M, L(r)=L(G)$,
+        \end{enumerate}
+
+    \subsection{确定机的化简}
+
+        寻找状态数比$M$少的一个DFA $M'$, 使得$L(M)=L(M')$
+
+\section{词法分析器}
+
+    \newcommand{\pb}[1]{\parbox[c]{12ex}{#1}}
+    \begin{figure}[h!]\centering
+        \begin{psmatrix}[rowsep=0.5]
+            \psframebox{对$x$的描述} & \psframebox{$x$的生成器} & \psframebox{$x$} \\
+            \psframebox{lex源程序} & \psframebox{lex} & \psframebox{词法分析器} \\
+            \psframebox{正规定义式$P_i,A_i$} & \psframebox{\pb{$P_i\to M_i$, NFA, DFA, 状态转换表}} & \psframebox{\pb{\fbox{控制程序} \fbox{转换矩阵}}} 
+            \ncline{->}{1,1}{1,2}
+            \ncline{->}{1,2}{1,3}
+            \ncline{1,2}{2,2}
+            \ncline{2,1}{2,2}
+            \ncline{->}{2,2}{2,3}
+            \ncline{->}{3,1}{3,2}
+            \ncline{->}{3,2}{3,3}
+        \end{psmatrix}
+        \caption{词法分析器的工作过程}
+        \label{fig:lex}
+    \end{figure}
+
+    X的描述通过生成器生成X. lex是词法分析器的生成器, 生成词法分析器.
+
+    我们已经了解到, \textbf{各种语言的构成规则可以通过正规式来描述}. 其中3类是可以穷举的. \textbf{正规式和DFA是等价的}.
+
+    \subsection{语言lex的一般描述}
+
+        lex源程序$=$正规定义式$+$识别规则. \textsf{正规定义式}: 定义在字母表$\Sigma$上的正规定义式序列: $d_1\to r_1, d_2\to r_2$, 其中$d_i$表示不同名字, $r_i$为正规式. Pascal的标识符集合: $letter\to \cdots, digit\to \cdots, id\to letter(letter|digit)^*$.
+
+        lex源程序的识别规则是一串如下形式的lex语句:
+\begin{verbatim}
+P1 {A1}
+P2 {A2}
+... ...
+Pm {Am}
+\end{verbatim}
+
+        $P_i$是一个正规式, 称为\textsf{词形}; $A_i$是执行的动作: return(code, value).
+
+    \subsection{lex的实现}
+
+        将NFA合并为NFA, 然后确定化得到等价的DFA. 
+
+        词法分析器的两部分: 控制, 转化表. 同一个词法分析器生成器生成的不同词法分析器的控制部分是一样的, 但转化表不同. 控制部分的功能:读字符, 在DFA上运行, 最大串匹配, 终态判别, 构造二元组返回.
+
+\section{上下文无关文法(Context-free Grammar)}
+
+    研究上下文无关文法的目的: 语言的语法结构的形式描述; 从形式描述中, 研究语法分析器的构造.
+
+    \subsection{引言}
+
+        \textsf{文法(grammar)}是描述语言的语法结构的形式规则, 目的是解决语言的有穷说明问题, 包含对语法的描述, 但却不表达任何语义. 文法的描述应当: 形式上严格准确, 易于理解, 具有较强的描述能力, 有利于句子的分析和翻译, 构造语法分析器.
+
+        文法分为4类, 对应4类语言. 与程序语言语法有关的是上下文无关文法(2型文法). 0型文法: $G=(V_T, V_N, S, \mathcal{P})$, 产生式$\alpha\to\beta$满足$\alpha\in(V_N\cup V_T)^*$且至少含有一个$V_N$符, $\beta\in(V_N\cup V_T)^*$. 2型文法: $\alpha$串改为$A$符号. 3型文法: 只允许一个非终结符号且在最右边 $A\to\alpha B$. 形式文法不能描述自然语言.
+
+        \textsf{上下文无关文法}定义的语法范畴(或语法单位)完全独立于这种范畴可能出现的环境. 只能描述一部分语言. 上下文无关文法$G$是一个四元式$(V_T,V_N,S,\mathcal{P})$, 其中$V_T$是非空有限集, 元素是终结符号, $V_N$元素是非终结符号, $S\in V_N$称为开始符号, $\mathcal{P}$是产生式集合, 每个产生式形式是$\{P\to\alpha|P\in V_N, \alpha\in(V_T\cup V_N)^*, \textrm{S至少一次为P}\}$. \textsf{终结符号}: 用以组成语言中的串的\textbf{基本}符号; \textsf{非终结符}: 是标记某种\textbf{串}的集合的特定符号. \textsf{开始符号}是一个非终结符号, 标记感兴趣的语法范畴, 定义文法的顶层. C语言的开始符号: 程序. \textsf{产生式}规定由终结符和别的语法范畴组成一个新的语法范畴的方法, 语法结构: 非终结符$\to$一串非终结符和终结符. 
+
+        用有穷条产生式得到无穷的表达式语言, 必须递归.
+
+        \textsf{直接推导}是两个字符串之间的一种关系: $(\alpha A\beta)\mathcal{R}(\alpha\gamma\beta)$, 若$A\to\gamma\in\mathcal{P}, \alpha, \beta\in V^*, V=V_T\cup V_N$, 则$\mathcal{R}$就是直接推导, 记为$\alpha A\beta\Rightarrow\alpha\gamma\beta$. \textsf{推导}是两个串$u_0, u_n$存在一个串序列$u_0\Rightarrow u_1\Rightarrow \cdots\Rightarrow u_n$, 则$u_0\mathcal{R}_1u_n$. $u_0\stackrel{+}{\Rightarrow}u_n$表示从$u_0$出发, 经过一步或若干步可推导出$u_n$. $u_0\stackrel{*}{\Rightarrow}u_n$表示从$u_0$出发, 经过零步或若干步可推导出$u_n$. 
+
+        要由推导引出语言, 限制推导中的$u_0$为$S$, 推导要从开始符号开始. $S\stackrel{*}{\Rightarrow}\alpha, \alpha\in V^*$, 称$\alpha$为$G$的\textsf{句型}, 如再要求$\alpha\in V_T^*$, 则$\alpha$为$G$的\textsf{句子}. 文法$G$所产生的句子的全体是一个\textsf{语言}, 记为$L(G)=\{\alpha|S\stackrel{+}{\Rightarrow}\alpha\&\alpha\in V_T^*\}$. 从一个句型到另一个句型的推导过程一般不唯一, 通常只考虑最左推导和最右推导.
+
+    \subsection{语法树和二义性}
+
+        \textsf{语法树}是为了理解句子的语法, 得到句子如何从开始符号推导得到, 因此引入的图形. 它是句型推导的图形表示. 树的内节点对应非终结符号, 叶子对应非终结符号(句型)或者终结符号. 不同推导过程得到相同的语法树; 有时根据应用规则不同得到不同的语法树, 此时称文法$G$为\textsf{二义的}. 文法的二义性是不可判定的. 有些文法生来就是二义的(inherently ambiguous). 在大多数情况下, 二义性存在于文法中, 而非语言本身.
+
+        解决二义性: 重写语法$G_0:E\to E+E|E*E|(E)|id$为$G_1:E\to E+T|T, T\to T+F|F, F\to(E)|id$, \textbf{规定优先级}, 没有机械的方法.
+
+        上下文无关文法有如下限制:
+
+        \begin{enumerate}
+            \item $G$不会产生$P\to P$
+            \item $\forall P\in V_N$, 必须都有用处, 即
+                \begin{itemize}
+                    \item $\exists S\stackrel{*}{\Rightarrow} \alpha P\beta$, $P$在句型中出现
+                    \item $\exists \gamma\in V_T^*, P\stackrel{+}{\Rightarrow}\gamma$, 即对$P$不存在不终结的回路.
+                \end{itemize}
+        \end{enumerate}
+

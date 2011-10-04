@@ -1,0 +1,25 @@
+\chapter{自下而上的语法分析}
+
+    从输入串开始, 逐步进行\textsf{归约}, 直到到达文法的开始符号, 恢复一系列token表述的结构.
+
+    \section{基本问题}
+
+        在任何时刻, 找出句型的句柄.
+
+        \subparagraph{归约} 将符号放入栈, 当栈顶形成某个表达式的一个候选式时将这部分归约为对应产生式的左部符号.
+
+        \subparagraph{句柄} 从$uvw$到$uAw$的归约过程中, $A\to v$是一个句柄.
+
+        \subparagraph{短语} 令$S$是文法$G$的开始符号, 若$\alpha\beta\delta$是$G$的一个句型, 若有$S\stackrel{*}{\Rightarrow}\alpha A\delta$且$A\stackrel{+}{\Rightarrow}\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于非终结符$A$的\textsf{短语}. 如果有$A\to\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于规则$A\to\beta$的\textsf{直接短语}. 一个句型的\textsf{最左直接短语}称为该句型的\textsf{句柄}. \textsf{规范推导}即最右推导. \textsf{规范句型}即由规范推导得到的句型.
+        % 课件上这里写错了
+
+        \subparagraph{规范归约} 关于句型$\alpha$的一个最右推导的逆过程, 也称为\textsf{最左归约}.
+
+        \paragraph{在哪里寻找句柄}
+            栈顶
+
+    \section{直观算符优先分析法}
+
+    \section{算符优先分析}
+
+    \section{LR分析法}
