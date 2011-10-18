@@ -1,0 +1,60 @@
+\def\lecture{10}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill September 29, 2011 \\
+{\centering \sf \large Lecture \lecture:
+LL(1)分析法, 自下而上的语法分析 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{自上而下的语法分析}
+
+    \subsection{预测分析程序}
+
+        \subsubsection{构造FOLLOW$(A)$}
+
+            应用下列规则, 直到没有不再有变化:
+
+            \begin{enumerate}
+                \item $\#\in\textrm{FOLLOW}(S)$
+                \item $A\to\alpha B\beta \Rightarrow \textrm{FIRST}(\beta)\subset\textrm{FOLLOW}(B)$, 除$\varepsilon$
+                \item $A\to\alpha B$, or $A\to\alpha B\beta$ and $\varepsilon\in\textrm{FIRST}(\beta)\Rightarrow\textrm{FOLLOW}(A)\subset\textrm(FOLLOW)(B)$.
+            \end{enumerate}
+
+    \subsection{LL(1)分析法}
+
+        \textsf{LL(1)分析法}: 从左到右扫描输入串, 最左推导, 分析时一步只向前查看一个符号.
+
+        \subsubsection{LL(1)文法的条件}
+
+            文法$G$是LL(1)的, 也就是说$\forall A\in V_N$的任何两个不同产生式$A\to \alpha|\beta$, 有
+            \begin{enumerate}
+                \item $\textrm{FIRST}(\alpha)\cap\textrm{FIRST}(\beta)=\emptyset$
+                \item $\beta\stackrel{*}{\Rightarrow}\varepsilon\Rightarrow\textrm{FIRST}(\alpha)\cap\textrm{FOLLOW}(A)=\emptyset$
+            \end{enumerate}
+
+            条件语句文法if-then不能改造成LL(1)文法
+
+\section{自下而上的语法分析}
+
+    从输入串开始, 逐步进行\textsf{归约}, 直到到达文法的开始符号.
+
+    \subsection{基本问题}
+
+        在任何时刻, 找出句型的句柄.
+
+        \subparagraph{归约} 将符号放入栈, 当栈顶形成某个表达式的一个候选式时将这部分归约为对应产生式的左部符号.
+
+        \subparagraph{短语} 令$S$是文法$G$的开始符号, 若$\alpha\beta\delta$是$G$的一个句型, 若有$S\stackrel{*}{\Rightarrow}\alpha A\delta$且$A\stackrel{+}{\Rightarrow}\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于非终结符$A$的\textsf{短语}. 如果有$A\to\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于规则$A\to\beta$的\textsf{直接短语}. 一个句型的\textsf{最左直接短语}称为该句型的\textsf{句柄}. \textsf{规范推导}即最右推导. \textsf{规范句型}即由规范推导得到的句型.
+
+        % 课件上这里写错了
+
+        \subparagraph{规范归约} 关于句型$\alpha$的一个最右推导的逆过程, 也称为\textsf{最左归约}.
+
+    \subsection{直观算符优先分析法}
+
+    \subsection{算符优先分析}
+
+    \subsection{LR分析法}

@@ -1,3 +1,5 @@
+\newcommand\eqdot{=\hskip -.8em\cdot\ }
+
 \chapter{自下而上的语法分析}
 
     从输入串开始, 逐步进行\textsf{归约}, 直到到达文法的开始符号, 恢复一系列token表述的结构.
@@ -18,8 +20,61 @@
         \paragraph{在哪里寻找句柄}
             栈顶
 
+        \paragraph{动作}
+        \begin{description}
+            \item[移进] 下一输入符号移进栈顶
+            \item[归约] 把句柄按产生式的左部进行归约
+            \item[接受] 分析程序报告成功
+            \item[出错] 发现了一个语法错, 调用出错处理程序
+        \end{description}
+
+        被归约的串总是出现在栈顶.
+
     \section{直观算符优先分析法}
+
+        任二个相继出现的终结符$a$与$b$(可能中间有$V_N$)的优先级可能有以下优先关系: $a\lessdot b$, $a\eqdot b$, $a\gtrdot b$. 采用\textbf{优先级表}\footnote{注: 我想到了中缀表达式转后缀表达式的算法\ldots}\footnote{明神指出, 严蔚敏《数据结构》里有这个例子, 一模一样}!
 
     \section{算符优先分析}
 
+        \subsection{算符优先文法}
+
+            如果一个文法的任何产生式右部都不含两个相继(并列)的非终结符, 即不含有$\cdots QR\cdots$形式的产生式右部则我们称该文法为\textsf{算符文法}. 假定$G$是一个不含$\varepsilon-$产生式的算符文法. 对于任何一对终结符$a$, $b$, 我们说: 
+            \begin{itemize}
+                \item $a\eqdot b$当且仅当文法$G$中含有形如$P\to \cdots ab\cdots$或$P\to \cdots aQb\cdots$的产生式
+                \item $a\lessdot b$当且仅当$G$中含有形如$P\to \cdots aR\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}b\cdots$或$R\stackrel{+}{\Rightarrow}Qb\cdots$
+                \item $a\gtrdot b$当且仅当$G$中含有形如$P\to \cdots Rb\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}\cdots a$或$R\stackrel{+}{\Rightarrow}\cdots aQ$
+            \end{itemize}
+            如果一个算符文法$G$中的任何终结符对$(a,b)$至多只满足$a\eqdot b$, $a\lessdot b$, $a\gtrdot b$之一, 则称$G$是一个\textsf{算符优先文法}.
+
+        \subsection{从算符优先文法构造优先关系表}
+
+            
+
+        \subsection{一个优化: 引入优先函数}
+
+            引入优先函数来代替优先表, 可以满足大多数情况的需求, 但无法表示语法上的错误.
+
     \section{LR分析法}
+
+        \paragraph{初态}
+
+            $(S_0, \#, a_1,a_2, \cdots, a_n, \#)$
+
+        \paragraph{一般情况}
+
+            $(S_0S_1\cdots S_n, \#x_1x_2\cdots x_m, a_ia_{i+1}\cdots a_n\#)$
+
+        \paragraph{动作}
+
+            \begin{enumerate}
+                \item ACTION$[S_m,a_i]$为移进, $S=GOTO[S_m,a_i]$:
+                    \[(S_0S_1\cdots S_mS, \#x_1x_2\cdots x_ma_i, a_{i+1}\cdots a_n\#)\]
+                \item ACTION$[S_m,a_i]=\{A\to B\}$, 则
+                    \[(S_0S_1\cdots S_{m-1}S, \#x_1x_2\cdots x_{m-r}A, a_ia_{i+1}\cdots a_n\#)\]
+                    $S=GOTO[S_{m-r},A]$, $r=|\beta|$, $\beta=x_{m-r+1}\cdots x_m$
+                \item AC
+                \item ERR
+            \end{enumerate}
+
+
+                

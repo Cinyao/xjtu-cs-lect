@@ -1,0 +1,40 @@
+\def\lecture{11}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill October 9, 2011 \\
+{\centering \sf \large Lecture \lecture:
+自下而上的语法分析 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\newcommand\eqdot{=\hskip -.8em\cdot\ }
+
+\section{自下而上的语法分析}
+
+    \subsection{移进--- 归约}
+
+        动作:
+        \begin{description}
+            \item[移进] 下一输入符号移进栈顶
+            \item[归约] 把句柄按产生式的左部进行归约
+            \item[接受] 分析程序报告成功
+            \item[出错] 发现了一个语法错, 调用出错处理程序
+        \end{description}
+
+        被归约的串总是出现在栈顶.
+
+    \subsection{直观算符优先分析法}
+
+        任二个相继出现的终结符$a$与$b$(可能中间有$V_N$)的优先级可能有以下优先关系: $a\lessdot b$, $a\eqdot b$, $a\gtrdot b$. 采用\textbf{优先级表}\footnote{注: 我想到了中缀表达式转后缀表达式的算法\ldots}\footnote{明神指出, 严蔚敏《数据结构》里有这个例子, 一模一样}!
+
+    \subsection{算符优先分析}
+
+        \paragraph{算符优先文法}
+
+            如果一个文法的任何产生式右部都不含两个相继(并列)的非终结符, 即不含有$\cdots QR\cdots$形式的产生式右部则我们称该文法为\textsf{算符文法}.
+
+            % TODO
+
+    \subsection{LR分析法}

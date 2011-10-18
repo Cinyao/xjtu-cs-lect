@@ -1,0 +1,86 @@
+\def\lecture{12}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill October 12, 2011 \\
+{\centering \sf \large Lecture \lecture:
+自下而上的语法分析 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\newcommand\eqdot{=\hskip -.8em\cdot\ }
+
+\section{自下而上的语法分析}
+
+    直观算符优先文法仅仅按照优先级分析, 利用优先级的思想, 产生算符优先文法
+
+    \subsection{算符优先分析}
+
+        \paragraph{算符优先文法}
+
+            \begin{enumerate}
+                \item 不存在$A\to \cdots NQ\cdots$
+                \item 文法规定$V_T$符号被归约的顺序
+                \item 两个$V_T$符号的优先关系至多存在一个
+            \end{enumerate}
+
+            关键: \textsf{优先表}(构造, 使用的算法)
+
+        \paragraph{算法--- 控制程序}
+
+            \subparagraph{定义}
+
+                % TODO
+
+            \subparagraph{定理}
+
+                算符优先文法句型的一般形式: $\#N_1a_1N_2a_2\cdots N_na_nN_{n+1}\#$, 其中$a_i\in V_T$, $N_i\in V_N|\wedge$.
+
+                \textsf{最左素短语}是满足以下条件的最左子串$N_ja_j\cdots N_ia_iN_{i+1}$: $a_{j-1}\lessdot a_j$, $a_j\eqdot a_{j+1}, \cdots, a_{i-1}\eqdot a_i$, $a_i\gtrdot a_{i+1}$.
+
+                % 判断时忽略$V_N$符号
+
+                % 单非产生式
+
+            \subparagraph{优缺点}
+
+                速度快, 会误判
+
+                \begin{table}[h!]
+                    \centering
+                    \caption{规范归约 VS 算符优先文法}
+                    \label{tab:gfgyvcsfyx}
+                    \begin{tabular}{ccc}\toprule
+                        & 规范归约 & 算符优先文法 \\ \midrule
+                        操作对象 & 句柄 & 最左素短语 \\
+                        定义 & 最左直接短语 & --- \\
+                        成分 & 文法符号 & 至少含有一个$V_T$符号 \\
+                        位置 & 最左 & 最左 \\
+                        怎么找 & 穷举(栈顶) & $\lessdot\cdots\eqdot\cdots\gtrdot$形式 \\
+                        归约速度 & 慢 & 快 \\
+                        原因 & --- & 忽略单非产生式 \\
+                        正确性 & --- & 可能接受错误的输入 \\
+                        \bottomrule
+                    \end{tabular}
+                \end{table}
+
+        \paragraph{优先函数}
+
+            % TODO 定义
+
+            变相的查表. 优点: 节约存储空间; 缺点: 不能正确表示表格中``出错''(不可比较)的情况.
+
+            不唯一.
+
+            \subparagraph{存在性} 并非总能映射! 证明: 举反例.
+
+            \subparagraph{生成方法} 有向图, 类似拓扑排序. $f(a)=$从$f_a$组开始的路径长度和.
+
+    \subsection{LR分析法}
+
+        LR分析: 从左到右扫描输入串, 识别句柄, 自下而上归约
+
+        \subsubsection{LR分析程序}
+
+            \paragraph{实质} 分析栈+DFA
