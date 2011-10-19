@@ -1,0 +1,45 @@
+\def\lecture{14}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill October 12, 2011 \\
+{\centering \sf \large Lecture \lecture:
+三元式和树 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{属性文法}
+
+    \subsection{三元式和树}
+
+        三元式: OP ARG1 ARG2. 需要用到的动作有查表和开辟新目. 缺点是不灵活, 不利于优化.
+
+        \subsubsection{间接三元式}
+
+            用间接码表辅助三元式来表示中间代码, 可以避免重复表示, 方便代码的优化, 但是要引入语义动作.
+
+        \subsubsection{树}
+
+            表示表达式和语句.
+
+    \subsection{四元式}
+
+        格式: OP ARG1 ARG2 RESULT. 编译时可以使用中间变量, 在优化时再考虑压缩问题.
+
+        \subsubsection{翻译成四元式}
+
+            \paragraph{语义变量和过程}
+            \begin{itemize}
+                \item newtemp 产生新变量的整数码
+                \item entry
+                \item e.place 取位置
+                \item gen(OP,ARG1,ARG2,RESULT) 产生一个四元式
+            \end{itemize}
+
+            \paragraph{类型转换}
+                在语义规则中卷入类型信息, 必要时产生类型转换的四元式. 可以专门开个栈.
+
+        \subsubsection{布尔表达式翻译成四元式}
+
+            文法: $E\to E\wedge E|E\vee E|\neg E|(E)|i|i\mathrm{\ rop\ }i$. 可以像算术表达式一样求值, 也可以引入短路措施(不考虑副作用时结果是相同的)
