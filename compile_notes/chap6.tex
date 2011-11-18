@@ -1,3 +1,87 @@
-\chapter{属性文法}
+\chapter{语法制导翻译和中间代码的产生}
+
+    \section{属性文法}
+
+        \subsection{三元式和树}
+
+            三元式: OP ARG1 ARG2. 需要用到的动作有查表和开辟新目. 缺点是不灵活, 不利于优化.
+
+            \subsubsection{间接三元式}
+
+                用间接码表辅助三元式来表示中间代码, 可以避免重复表示, 方便代码的优化, 但是要引入语义动作.
+
+            \subsubsection{树}
+
+                表示表达式和语句.
+
+        \subsection{四元式}
+
+            格式: OP ARG1 ARG2 RESULT. 编译时可以使用中间变量, 在优化时再考虑压缩问题.
+
+            \subsubsection{翻译成四元式}
+
+                \paragraph{语义变量和过程}
+                \begin{itemize}
+                    \item newtemp 产生新变量的整数码
+                    \item entry
+                    \item e.place 取位置
+                    \item gen(OP,ARG1,ARG2,RESULT) 产生一个四元式
+                \end{itemize}
+
+                \paragraph{类型转换}
+                    在语义规则中卷入类型信息, 必要时产生类型转换的四元式. 可以专门开个栈.
+
+            \subsubsection{布尔表达式翻译成四元式}
+
+                文法: $E\to E\wedge E|E\vee E|\neg E|(E)|i|i\mathrm{\ rop\ }i$. 可以像算术表达式一样求值, 也可以引入短路措施(不考虑副作用时结果是相同的)
 
 
+\section{语义分析和中间代码的产生}
+
+    \subsection{IF语句的四元式结构}
+
+        IF $A\vee B<D$ THEN $S_1$ ELSE $S_2$, 四元式结构类似汇编代码. 条件$E$的block对外只有两个转移目标.
+
+        \subsubsection{困难}
+
+            无法预言跳转目标的指令地址. 方法: 朴素的队列法, 拉链 --- 返填法(并查集?)
+
+    \subsection{布尔表达式文法定义和语义动作}
+
+        \subsubsection{文法定义}
+
+            $G_1:E\to E\wedge E|E\vee|\neg E|(E)|i|i\mathrm{\ rop\ }i$
+
+            $G_2:E\to E^\wedge E|E^0 E|\neg E|(E)|i|i\mathrm{\ rop\ }i, E^\wedge\to E\wedge, E^0\to E\vee$
+
+            拉链的要素: 链头, 后继函数, 终止条件.
+
+    \subsection{控制语句的翻译}
+
+        标号允许先使用再定义.
+
+    \subsection{控制语句的翻译}
+
+        \subsubsection{标号}
+
+           标号允许先使用再定义.
+
+            \paragraph{定义}
+
+                符号表: 名字, 类型(标号), \ldots, 定义否(先使用的情况就写没有定义), 地址(定义的地址或调用的地址, 使用拉链法).
+
+            \paragraph{使用}
+
+                无条件转移, 根据名字查表.
+
+            \paragraph{出错}
+
+                若已经在符号表中但重复定义或原类型不是标号则出错.
+
+        \subsubsection{条件语句}
+
+            条件语句可以嵌套.
+
+            \paragraph{解决办法}
+
+                给终结符附带语义项Chain.
