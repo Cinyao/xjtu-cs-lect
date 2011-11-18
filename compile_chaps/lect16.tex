@@ -1,0 +1,38 @@
+\def\lecture{16}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill October 26, 2011 \\
+{\centering \sf \large Lecture \lecture:
+控制语句中间代码的产生 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{语义分析和中间代码的产生}
+
+    \subsection{控制语句的翻译}
+
+        \subsubsection{标号}
+
+           标号允许先使用再定义.
+
+            \paragraph{定义}
+
+                符号表: 名字, 类型(标号), \ldots, 定义否(先使用的情况就写没有定义), 地址(定义的地址或调用的地址, 使用拉链法).
+
+            \paragraph{使用}
+
+                无条件转移, 根据名字查表.
+
+            \paragraph{出错}
+
+                若已经在符号表中但重复定义或原类型不是标号则出错.
+
+        \subsubsection{条件语句}
+
+            条件语句可以嵌套.
+
+            \paragraph{解决办法}
+
+                给终结符附带语义项Chain.

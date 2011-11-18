@@ -1,0 +1,18 @@
+\def\lecture{22}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill November 18, 2011 \\
+{\centering \sf \large Lecture \lecture:
+符号表 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{符号表}
+
+    组织方案: 线性表, 折半查找, 哈希表. 此外还要解决冲突问题, 因此需要引入探查机制: (内部解决) 线性探查法(开放探查法), 二次探查法, 平方探查法, (外部解决) 链表法, \ldots
+
+    \paragraph{关于哈希表的讨论}
+
+        总时间$=$计算时间$I$+查找长度. 因此尽量减小查找长度.

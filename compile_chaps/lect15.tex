@@ -1,0 +1,34 @@
+\def\lecture{15}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill October 21, 2011 \\
+{\centering \sf \large Lecture \lecture:
+控制语句中间代码的产生 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{语义分析和中间代码的产生}
+
+    \subsection{IF语句的四元式结构}
+
+        IF $A\vee B<D$ THEN $S_1$ ELSE $S_2$, 四元式结构类似汇编代码. 条件$E$的block对外只有两个转移目标.
+
+        \subsubsection{困难}
+
+            无法预言跳转目标的指令地址. 方法: 朴素的队列法, 拉链 --- 返填法(并查集?)
+
+    \subsection{布尔表达式文法定义和语义动作}
+
+        \subsubsection{文法定义}
+
+            $G_1:E\to E\wedge E|E\vee|\neg E|(E)|i|i\mathrm{\ rop\ }i$
+
+            $G_2:E\to E^\wedge E|E^0 E|\neg E|(E)|i|i\mathrm{\ rop\ }i, E^\wedge\to E\wedge, E^0\to E\vee$
+
+            拉链的要素: 链头, 后继函数, 终止条件.
+
+    \subsection{控制语句的翻译}
+
+        标号允许先使用再定义.

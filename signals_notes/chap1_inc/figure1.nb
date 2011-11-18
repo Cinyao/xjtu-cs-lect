@@ -1,0 +1,140 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4547,        130]
+NotebookOptionsPosition[      4126,        110]
+NotebookOutlinePosition[      4465,        125]
+CellTagsIndexPosition[      4422,        122]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Sin", "[", 
+      RowBox[{"0.1", "\[Pi]", " ", "x"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "20"}], "}"}]}], "]"}], ",", 
+   RowBox[{"Filling", "\[Rule]", "Axis"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.523793572445086*^9, 3.523793635644896*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGCwA2IQDQEf7BlQgYP/S33z98cuQ8U5HOKiSlmUzz+C8gUc
+VnyZPrv88UsoX8Thf4iLMF/+OyhfwgHVXBk0eQU0/UoO8SjmqzgEotiv5sAe
+I2KstmyhDYSv4RAKkd8P4Ws5JED0Q/k6Dssh5kP5ejD7oXwDmPugfEMHhlBk
+eSOHJSj6jdHMN3EIRrHfFOq+jXtg4YcanBxofAE0vggaXwKNL4PGV0DjK6Hx
+VdD4amh8DTS+FhpfB42vh8Y3QOMbovGN0PjGaHwTNL4pGn80PVIrPQIAHiW0
+Sw==
+   "], {{{}, {}, {}, 
+     {Hue[0.67, 0.6, 0.6], Opacity[0.2], LineBox[{32, 12}], LineBox[{33, 13}],
+       LineBox[{34, 14}], LineBox[{35, 15}], LineBox[{36, 16}], 
+      LineBox[{37, 17}], LineBox[{38, 18}], LineBox[{39, 19}], 
+      LineBox[{40, 20}], LineBox[{41, 21}]}, 
+     {Hue[0.67, 0.6, 0.6], Opacity[0.2], LineBox[{22, 2}], LineBox[{23, 3}], 
+      LineBox[{24, 4}], LineBox[{25, 5}], LineBox[{26, 6}], LineBox[{27, 7}], 
+      LineBox[{28, 8}], LineBox[{29, 9}], LineBox[{30, 10}], 
+      LineBox[{31, 11}]}}, {{}, 
+     {Hue[0.67, 0.6, 0.6], 
+      PointBox[{42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 
+       57, 58, 59, 60, 61, 62}]}, {}}}],
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  PlotRange->{{0., 21.}, {-1., 1.}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{
+    Scaled[0.02], 
+    Scaled[0.02]}]], "Output",
+ CellChangeTimes->{{3.5237936135556107`*^9, 3.523793636338447*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Sin", "[", 
+      RowBox[{"0.2", "\[Pi]", " ", "x"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "20"}], "}"}]}], "]"}], ",", 
+   RowBox[{"Filling", "\[Rule]", "Axis"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.523793572445086*^9, 3.523793659907596*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGCwA2IQDQEf7BlQgUNcVCmL8vlHUHEOh/8hLsJ8+e+gfAE0
+vohDPIp6CQf2GBFjtWULbSB8GYcEiPx+CF8Bph/KV3JgCEXmq6CpV4Oat3EP
+hK/hkIRin5YDYyiye3Rg5kH5ejDzoHwDB66ueT6Wlbug7jN0iEaxz8iBGcU9
+xjDzoXwTh0QU9aZQ9x3cAws/1ODkQOMLoPFF0PgSaHwZNL4CGl8Jja+CxldD
+42ug8bXQ+DpofD00vgEa3xCNb4TGN0bjm6DxTdH4o+mRWukRAL+amfE=
+   
+   "], {{{}, {}, {}, 
+     {Hue[0.67, 0.6, 0.6], Opacity[0.2], LineBox[{27, 7}], LineBox[{28, 8}], 
+      LineBox[{29, 9}], LineBox[{30, 10}], LineBox[{31, 11}], 
+      LineBox[{37, 17}], LineBox[{38, 18}], LineBox[{39, 19}], 
+      LineBox[{40, 20}], LineBox[{41, 21}]}, 
+     {Hue[0.67, 0.6, 0.6], Opacity[0.2], LineBox[{22, 2}], LineBox[{23, 3}], 
+      LineBox[{24, 4}], LineBox[{25, 5}], LineBox[{26, 6}], LineBox[{32, 12}],
+       LineBox[{33, 13}], LineBox[{34, 14}], LineBox[{35, 15}], 
+      LineBox[{36, 16}]}}, {{}, 
+     {Hue[0.67, 0.6, 0.6], 
+      PointBox[{42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 
+       57, 58, 59, 60, 61, 62}]}, {}}}],
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  PlotRange->{{0., 21.}, {-0.951056516295154, 0.9510565162951538}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{
+    Scaled[0.02], 
+    Scaled[0.02]}]], "Output",
+ CellChangeTimes->{{3.5237936135556107`*^9, 3.523793660964364*^9}}]
+}, Open  ]]
+},
+WindowSize->{1366, 743},
+WindowMargins->{{Automatic, 1024}, {0, Automatic}},
+FrontEndVersion->"8.0 for Linux x86 (64-bit) (November 14, 2010)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 382, 10, 44, "Input"],
+Cell[964, 34, 1349, 28, 227, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2350, 67, 382, 10, 44, "Input"],
+Cell[2735, 79, 1375, 28, 224, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
