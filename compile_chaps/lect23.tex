@@ -1,0 +1,20 @@
+\def\lecture{23}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill November 23, 2011 \\
+{\centering \sf \large Lecture \lecture:
+分层变量符号表 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{符号表}
+
+    \subsection{符号的作用域}
+
+        \paragraph{分层变量符号表} 哈希链分为活名区和死名区, 元素指向变量信息四元组(变量名, 生存期, 同名next域). 5个表: 哈希表HT, 变量名串Char String, 符号信息表INFO, 符号表Symbol Table, 块表Block Table. 通过指针相联系. 常规动作: 填新项, 进入子程序, 查表, 退出子程序.
+
+\section{运行时空间组织}
+
+    分配策略: 动态分配, 静态分配. 允许递归的语言不能使用静态分配. 满足先申请后释放的用栈实现, 否则用堆实现.
