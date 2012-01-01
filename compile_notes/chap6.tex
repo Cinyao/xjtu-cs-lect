@@ -153,7 +153,7 @@
             \begin{itemize}
                 \item $W\to\ $ While
                     \begin{verse}
-                        $W$.Quad $\gets$ NXQ
+                        $W$.Quad $\gets$ NXQ \hfill Quad是While语句中判断条件的地址属性
                     \end{verse}
                 \item $W^d\to W\ E\ $do
                     \begin{verse}
@@ -245,7 +245,7 @@
                             \begin{verse}
                                 elist.Place $\gets$ $E$.Place; \hfill 这里不需要判断$E$是不是复杂变量 \\
                                 elist.DIM $\gets$ 1; \\
-                                elist.Array $\gets$ ENTRY(i)
+                                elist.Array $\gets$ ENTRY(i);
                             \end{verse}
                         \item $V\to \mathrm{elist}]$
                             \begin{verse}
@@ -299,12 +299,12 @@
                     \end{verse}
                 \item arglist $\to$ arglist$^{(1)}$, $E$
                     \begin{verse}
-                        arglist$^{(1)}$.Queue $+=$ $E$.Place \\
-                        arglist.Queue $\gets$ arglist$^{(1)}$.Queue 
+                        arglist$^{(1)}$.Queue $+=$ $E$.Place; \\
+                        arglist.Queue $\gets$ arglist$^{(1)}$.Queue;
                     \end{verse}
                 \item arglist $\to E$
                     \begin{verse}
-                        arglist.Queue $\gets$ $\{E$.Place\} \\
+                        arglist.Queue $\gets$ $\{E$.Place\};
                     \end{verse}
             \end{itemize}
 
