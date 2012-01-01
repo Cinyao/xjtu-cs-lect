@@ -1,10 +1,32 @@
 \chapter{语法制导翻译和中间代码的产生}
 
+    \section{语法制导翻译}
+
+        在语法分析过程中, 每次\textbf{归约时}根据每个产生式的\textsf{语义子程序}(语义动作)进行翻译得到中间代码的方法叫做\textsf{语法制导翻译}. 每当语法用一个产生式进行了推导就驱动对应的子程序工作.
+
     \section{属性文法}
+
+        \subsection{语法制导翻译中的符号}
+
+            文法符号$X$在不同方面的属性记为$X$.type, $X$.val等. 一个产生式中同一符号的多个实例用上角标区分, 如$E\to E\textsuperscript{(1)}+E\textsuperscript{(2)}$. 产生式的语义动作记在花括号里.
 
         \subsection{三元式和树}
 
             三元式: OP ARG1 ARG2. 需要用到的动作有查表和开辟新目. 缺点是不灵活, 不利于优化.
+
+            \subsubsection{生成三元式的语义动作}
+
+                \begin{center}
+                    \begin{tabular}[h!]{cc} \toprule
+                        三元式 & 语义动作 \\ \midrule
+                        $E\to E^{(1)} \mathrm{\ op\ } E^{(2)}$ & \{$E$.val:=TRIP(op, $E^{(1)}$.val, $E^{(2)}$.val)\} \\
+                        $E\to (E^{(1)})$ & \{$E$.val:=$E^{(1)}$.val\} \\
+                        $E\to -E^{(1)}$ & \{$E$.val:=TRIP(@, $E^{(1)}$.val, $-$) \\
+                        $E\to$ id & \{$E$.val:=ENTRY(id)\} \\ \bottomrule
+                    \end{tabular}
+                \end{center}
+
+                TRIP是一个``计算''的子程序, ENTRY是查表(必要时开辟)的子程序.
 
             \subsubsection{间接三元式}
 
@@ -16,39 +38,60 @@
 
         \subsection{四元式}
 
-            格式: OP ARG1 ARG2 RESULT. 编译时可以使用中间变量, 在优化时再考虑压缩问题.
+            格式: OP ARG1 ARG2 RESULT. 编译时可以使用中间变量, 在优化时再考虑压缩问题. 也可以认为是\textsf{三地址代码}(TAC).
 
             \subsubsection{翻译成四元式}
 
                 \paragraph{语义变量和过程}
                 \begin{itemize}
                     \item newtemp 产生新变量的整数码
-                    \item entry
-                    \item e.place 取位置
+                    \item ENTRY($i$)
+                    \item e.Place 取位置
                     \item gen(OP,ARG1,ARG2,RESULT) 产生一个四元式
+                    \item NXQ 下一个将要形成但还没形成的四元式的编号, 从1开始. 执行一次gen则NXQ自增1
                 \end{itemize}
 
                 \paragraph{类型转换}
-                    在语义规则中卷入类型信息, 必要时产生类型转换的四元式. 可以专门开个栈.
+                    在语义规则中卷入类型信息$E$.MODE, 必要时产生类型转换的四元式. 可以专门开个栈.
 
             \subsubsection{布尔表达式翻译成四元式}
 
                 文法: $E\to E\wedge E|E\vee E|\neg E|(E)|i|i\mathrm{\ rop\ }i$. 可以像算术表达式一样求值, 也可以引入短路措施(不考虑副作用时结果是相同的)
 
+    \section{IF语句的四元式结构}
 
-\section{语义分析和中间代码的产生}
+        四元式结构类似汇编代码. 条件$E$的block对外只有两个转移目标($E$.TC和$E$.FC).
 
-    \subsection{IF语句的四元式结构}
+        \begin{figure}[h!]
+            \begin{center}
+                \begin{psmatrix}[rowsep=0.2, colsep=0.5]
+                    (1) & (jnz, $A$, \uline\quad, 5)\\
+                    (2) & (j, \uline\quad, \uline\quad, 3)\\
+                    (3) & (j<, $B$, $D$, 5)\\
+                    (4) & (j, \uline\quad, \uline\quad, $p+1$)\\
+                    (5) & \fbox{\qquad S1\qquad}\\
+                    ($p$) & (j, \uline\quad, \uline\quad, $q$)\\
+                    ($p+1$) & \fbox{\qquad S2\qquad}\\
+                    ($q$) & 下一条语句\\
+                \end{psmatrix}
+                \ncangle[angleA=0, angleB=0, arm=2cm]{->}{1,2}{5,2}
+                \ncangle[angleA=0, angleB=0, arm=2cm]{->}{3,2}{5,2}
+                \ncangle[angleA=0, angleB=0, arm=2.5cm]{->}{4,2}{7,2}
+                \ncangle[angleA=0, angleB=0, arm=1cm]{->}{6,2}{8,2}
+            \end{center}
+            \caption{IF $A\vee B<D$ THEN $S_1$ ELSE $S_2$的四元式结构}
+            \label{fig:if-4-tuple}
+        \end{figure}
 
-        IF $A\vee B<D$ THEN $S_1$ ELSE $S_2$, 四元式结构类似汇编代码. 条件$E$的block对外只有两个转移目标.
+        \subsection*{困难}
 
-        \subsubsection{困难}
+            跳转目标地址并非预先确定, 依赖于之后的翻译结果, 策略要具有伸缩性. 方法: 朴素的队列法, 拉链 --- 返填法(可以利用好空间, 并查集的一种实现)
 
-            无法预言跳转目标的指令地址. 方法: 朴素的队列法, 拉链 --- 返填法(并查集?)
+    \section{布尔表达式文法定义和语义动作}
 
-    \subsection{布尔表达式文法定义和语义动作}
+        \subsection{文法定义}
 
-        \subsubsection{文法定义}
+            改进布尔表达式的文法以方便回填四元式:
 
             $G_1:E\to E\wedge E|E\vee|\neg E|(E)|i|i\mathrm{\ rop\ }i$
 
@@ -56,32 +99,254 @@
 
             拉链的要素: 链头, 后继函数, 终止条件.
 
-    \subsection{控制语句的翻译}
+    \section{控制语句的翻译}
 
-        标号允许先使用再定义.
+        \subsection{标号}
 
-    \subsection{控制语句的翻译}
+           标号和转移语句配合使用, 允许先使用再定义.
 
-        \subsubsection{标号}
+            \subsubsection{定义}
 
-           标号允许先使用再定义.
+                符号表: 名字, 类型(标号), \ldots, 定义否(先使用的情况就写没有定义), 地址(定义的地址或调用的地址, 使用\textsf{拉链法}).
 
-            \paragraph{定义}
+            \subsubsection{使用}
 
-                符号表: 名字, 类型(标号), \ldots, 定义否(先使用的情况就写没有定义), 地址(定义的地址或调用的地址, 使用拉链法).
+                表现为无条件转移, 根据名字查表. 若先使用(遇到Goto $L_2$), 则在标号表中填入这个标号, 标记为``未定义'', 并且``定义地址''域可以填写当前语句的地址(NXQ), 日后返填.
 
-            \paragraph{使用}
-
-                无条件转移, 根据名字查表.
-
-            \paragraph{出错}
+            \subsubsection{出错}
 
                 若已经在符号表中但重复定义或原类型不是标号则出错.
 
-        \subsubsection{条件语句}
+        \subsection{条件语句}
 
-            条件语句可以嵌套.
+            具体来说, 对于IF $E$ THEN $S_1$ ELSE $S_2$这条语句, $E$附带$E$.TC和$E$.FC两个语义项. 扫描到THEN即可确定$E$.TC, 扫描到ELSE即可确定$E$.FC.
 
-            \paragraph{解决办法}
+            转移地址的确定和所处环境有关, 如IF $E_1$ THEN IF $E_2$ THEN $S_1$ ELSE $S_2$ ELSE $S_3$, $S_2$翻译后需要跳转到$S_3$后面. $S_1$翻译中的跳转问题: 若$S_1$结尾本身就有跳转, 那要服从外面的环境; 如果本身没有跳转, 那就另外加一条. 条件语句可以嵌套的解决办法: 给非终结符附带语义项$S$.Chain, 它指出所有期待翻译完$S$之后回填的四元式构成的链. 如翻译WHILE $E$ DO $S$, 在翻译完$S$之前不知道$E$.FC, 因此将$E$.FC地址放在$S$.Chain里.
 
-                给终结符附带语义项Chain.
+            翻译过程中只允许保持一个地址不知道, 因此需要为此改造文法以及时创建四元式: 
+
+            \begin{itemize}
+                \item $C\to$ if $E$ then 
+                    \begin{verse}
+                        Backpatch($E$.TC, NXQ); \\
+                        $C$.Chain $\gets$ $E$.FC 
+                    \end{verse}
+                \item $S\to C\ S^{(1)}$ 
+                    \begin{verse}
+                        $S$.Chain $\gets$ MERGE($C$.Chain, $S^{(1)}$.Chain)
+                    \end{verse}
+                \item $T^P\to C\ S^{(1)}\ $else 
+                    \begin{verse}
+                        $q\gets$\ NXQ; \\
+                        gen(j, \uline\quad, \uline\quad, 0); \hfill 这行地址就是$q$, 和$S^{(1)}$.Chain跳转目标是一致的 \\
+                        Backpatch($C$.Chain, NXQ);  \\
+                        $T^P$.Chain $\gets$\ MERGE($S^{(1)}$.Chain, $q$) \hfill 因此并入$S^{(1)}$.Chain
+                    \end{verse}
+                \item $S\to T^P\ S^{(2)}$ 
+                    \begin{verse}
+                        $S$.Chain $\gets$\ MERGE($T^P$.Chain, $S^{(2)}$.Chain)
+                    \end{verse}
+            \end{itemize}
+
+            \hrule
+
+            \begin{itemize}
+                \item $W\to\ $ While
+                    \begin{verse}
+                        $W$.Quad $\gets$ NXQ
+                    \end{verse}
+                \item $W^d\to W\ E\ $do
+                    \begin{verse}
+                        Backpatch($E$.TC, NXQ); \\
+                        $W^d$.Chain $\gets$ $E$.FC; \\
+                        $W^d$.Quad $\gets$ $W$.Quad
+                    \end{verse}
+                \item $S\to W^dS^{(1)}$
+                    \begin{verse}
+                        Backpatch($S^{(1)}$.Chain, $W^d$.Quad); \\
+                        gen(j, \uline\quad, \uline\quad, $W^d$.Quad); \\
+                        $S$.Chain $\gets W^d$.Chain
+                    \end{verse}
+            \end{itemize}
+
+
+        \subsection{多分支选择语句}
+
+            设置开关表辅助跳转. 分支较多的时候考虑哈希等优化方式.
+
+    \section{数组元素}
+
+        \subsection{地址计算}
+
+            认为下标从1开始, 每个元素占用一个字, 则数组元素$A[i_1, i_2, i_3, \cdots, i_n]$地址计算公式是$D=$C-part$+$V-part, 其中C-part$=a-C$, $C=d_2d_3\cdots d_n+d_3d_4\cdots d_n+\cdots+d_n+1$, V-part$=i_1d_2d_3\cdots d_n+i_2d_3d_4\cdots d_n+\cdots+i_{n-1}d_n+i_n$. $a$是数组首地址.
+
+            C-part是不变部分, 可以预先计算好放在临时单元$T_1$中.
+
+        \subsection{元素引用和中间代码}
+
+            四元式的形式: (:=, V-part+$T_1$, \uline\quad, $X$). 引入\textsf{变址}: 变址取数 (=[\ ], $T_1[T]$, \uline\quad, $X$), 变址存数 ([\ ]=, $X$, \uline\quad, $T_1[T]$)
+
+        \subsection{赋值语句中的数组元素翻译}
+
+            \subsubsection{文法}
+
+                \[A\to V:=E\]
+                \[V\to i[\textrm{elist}]|i\]
+                \[\textrm{elist}\to\textrm{elist},E|E\]
+                \[E\to E+E|(E)|V\]
+
+                \paragraph{要点}
+                 允许数组嵌套出现, 如A[B,C[2]+1]. 
+
+                \paragraph{在归约时完成V-part的计算}
+                    修改$V$的文法:
+                    \[V\to \textrm{elist}]|i\]
+                    \[\textrm{elist}\to \textrm{elist}, E|i[E\]
+
+            \subsubsection{语义和动作}
+
+                \paragraph{语义值}
+                    讨论数组问题时, 给每个变量分配两个语义值: 
+                    \begin{itemize}
+                        \item $V$.Place. 存储简单变量的符号表入口, 或者数组的C-part(应当理解成已经固定的那部分)的地址.
+                        \item $V$.Offset. 简单变量的offset为空, 数组的offset保存V-part的地址.
+                    \end{itemize}
+
+                \paragraph{语义动作}
+
+                    \begin{itemize}
+                        \item $A\to V:=E$
+                            \begin{verse}
+                                If V.Offset=null: \hfill 简单变量 \\
+                                \qquad gen(:=, $E$.Place, \uline\quad, $V$.Place) \\
+                                else: \\
+                                \qquad gen($[\ ]=$, $E$.Place, \uline\quad, $V$.Place[$V$.Offset])
+                            \end{verse}
+                        \item $E\to E^{(1)}+E^{(2)}$
+                            \begin{verse}
+                                $T\gets$ newtemp; \hfill 取得$E$的存储空间 \\
+                                gen($+$, $E^{(1)}$.Place, $E^{(2)}$.Place, $T$) \\
+                                $E$.Place $\gets T$ \hfill 将$E$放进$T$
+                            \end{verse}
+                        \item $E\to (E^{(1)})$
+                            \begin{verse}
+                                $E$.Place $\gets E^{(1)}$.Place
+                            \end{verse}
+                        \item $E\to V$ \hfill 变址取数
+                            \begin{verse}
+                                If $V$.Offset=null: \\
+                                \qquad $E$.Place $\gets$ $V$.Place \\
+                                else: \\
+                                \qquad $T$ $\gets$ newtemp; \\
+                                \qquad gen($=[\ ]$, $V$.Place[Offset], \uline\quad, $T$); \\
+                                \qquad $E$.Place $\gets T$;
+                            \end{verse}
+                        \item elist $\to$ i$[E]$ \hfill 启动一个elist
+                            \begin{verse}
+                                elist.Place $\gets$ $E$.Place; \hfill 这里不需要判断$E$是不是复杂变量 \\
+                                elist.DIM $\gets$ 1; \\
+                                elist.Array $\gets$ ENTRY(i)
+                            \end{verse}
+                        \item $V\to \mathrm{elist}]$
+                            \begin{verse}
+                                $T$ $\gets$ newtemp; \\
+                                gen($-$, elist.Array, C-part, $T$); \\
+                                $V$.Place $\gets T$; \\
+                                $V$.Offset $\gets$ elist.Place;
+                            \end{verse}
+                        \item $V\to$ i
+                            \begin{verse}
+                                $V$.Place $\gets$ ENTRY(i); \\
+                                $V$.Offset $\gets$ null; 
+                            \end{verse}
+                        \item elist $\to$ elist$^{(1)}, E$ \hfill 扩展elist, 升维
+                            \begin{verse}
+                                $T$ $\gets$ newtemp; \\
+                                $k \gets$ elist$^{(1)}$.DIM+1; \hfill 维度增加1 \\
+                                $d_k \gets$ LIMIT(elist$^{(1)}$.Array, $k$); \hfill 取得第$k$维的大小, 准备做乘法 \\ 
+                                \fbox{\parbox{0.5\linewidth}{
+                                gen($\times$, elist$^{(1)}$.Place, $d_k$, $T$); \\
+                                gen($+$, $E$.Place, $T$, $T$);
+                                }} \hfill 扩展时的关键计算: 乘加 \\
+                                elist.Array $\gets$ elist$^{(1)}$.Array; \\
+                                elist.Place $\gets$ $T$; \\
+                                elist.DIM $\gets$ $k$;
+                            \end{verse}
+                    \end{itemize}
+
+                    升维过程的两件大事: 数据从哪里来, 设立下一次扩展的初值.
+
+    \section{过程调用}
+
+        三件事: 转移和传递参数, 执行子过程, 返回. 实现形参和实参的结合(个数, 类型, 顺序). 需要解决的问题: 转移目标的确定, 返回地址的确定, 参数传递的方案.
+
+        \subsection{跳转}
+            
+            可以使用硬件或者软件的方法来实现跳转. 硬件上可以专门设计\textbf{转子程序}指令, 将返回地址放在特定的寄存器中. 软件方面方法就多了.
+        
+        \subsection{传递参数}
+
+            一种传参方案: Par1, Par2, Call S依次填入, 子程序中根据\textbf{返回地址}来寻找参数.
+
+        \subsection{语义动作}
+
+            \begin{itemize}
+                \item $S\to $Call i(arglist)
+                    \begin{verse}
+                        $\forall P\in$ arglist.Queue: \\
+                        \qquad gen(par, \uline\quad, \uline\quad, $P$); \\
+                        gen(Call, \uline\quad, \uline\quad, ENTRY(i));
+                    \end{verse}
+                \item arglist $\to$ arglist$^{(1)}$, $E$
+                    \begin{verse}
+                        arglist$^{(1)}$.Queue $+=$ $E$.Place \\
+                        arglist.Queue $\gets$ arglist$^{(1)}$.Queue 
+                    \end{verse}
+                \item arglist $\to E$
+                    \begin{verse}
+                        arglist.Queue $\gets$ $\{E$.Place\} \\
+                    \end{verse}
+            \end{itemize}
+
+        \subsection{语法二义性的问题} 
+        
+            过程调用和数组引用都可以表示为$X:=A(I,J)$, 语法制导无法确定产生式. 
+        
+            \begin{itemize}
+                \item 词法分析器提供特性信息, 对每个符号标注其类型, 这样可以区分函数和数组类型; 
+                \item 约定使用不同的文法, 比如数组使用$[\ ]$索引.
+            \end{itemize}
+
+            这两种方法的使用都很广泛.
+
+    \section{说明语句}
+
+        \subsection{说明简单变量的语义动作}
+
+            \begin{itemize}
+                \item $D\to D^{(1)}$, i
+                    \begin{verse}
+                        FILL(ENTRY(i), $D^{(1)}$.ATT); \\
+                        $D$.ATT $\gets$ $D^{(1)}$.ATT;
+                    \end{verse}
+                \item $D\to$ integer i
+                    \begin{verse}
+                        FILL(ENTRY(i), int); \\
+                        $D$.ATT $\gets$ int;
+                    \end{verse}
+                \item $D\to$ real i
+                    \begin{verse}
+                        FILL(ENTRY(i), real); \\
+                        $D$.ATT $\gets$ real;
+                    \end{verse}
+            \end{itemize}
+
+        \subsection{说明数组}
+
+            \subsubsection{数组的逻辑结构}
+
+                逻辑上用到三个结构: 数组的名字和基类型放在\textbf{符号表}里, 符号表里指向内情向量, \textbf{内情向量}(信息向量)里表明数组的更多属性, 实际上是符号表的延伸, 内情向量再指向\textbf{数组数据块}的首元素.
+
+            \subsubsection{确定数组和可变数组}
+
+                \textsf{可变数组}并不是运行时大小会起变化的数组, 而是在编译时大小不确定的数组. \textsf{确定数组}的长度和体积, 一级其内确定元素的偏移量都可以在编译的时候予以确定, 因此运行时不需要完整的内情向量. 

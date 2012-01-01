@@ -1,0 +1,22 @@
+\def\lecture{25}
+\clearpage \noindent\begin{tabularx}{\linewidth}{|X|}
+\hline \vskip -2mm
+{\sf 编译原理} \hfill November 30, 2011 \\
+{\centering \sf \large Lecture \lecture:
+运行时空间组织 \\ }
+\textsl{Lecturer: 冯博琴 \hfill Scriber: 戴唯思}\\ \hline
+\end{tabularx}
+\setcounter{section}{0}
+\renewcommand{\thepage}{\lecture -\arabic{page}}
+
+\section{运行时空间组织}
+
+    分配策略: 动态分配, 静态分配. 允许递归的语言不能使用静态分配. 满足先申请后释放的用栈实现, 否则用堆实现.
+
+    \subsection{Fortran语言的存储分配}
+
+        利用DAG实现分层分配. 局部区中包含临时变量, 形式单元, 寄存器保护区和返回地址. 特色: COMMON无名/有名公共数据块. 还有个很奇葩的等价语句, 可以采用并查集实现, 难点: 复杂变量, 方法是引入动态基准的坐标, 建立等价环.
+
+    \subsection{动态分配: 简单栈式分配}
+
+        

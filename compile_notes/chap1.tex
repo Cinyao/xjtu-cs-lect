@@ -25,18 +25,20 @@
 
 \section{什么叫编译程序}
 
-    \subparagraph{翻译程序}    把某一种语言程序(称为\textsf{源语言程序})等价地转换成另一种语言程序(称为\textsf{目标语言程序})的程序.
+    \begin{description}
+        \item[翻译程序]    把某一种语言程序(称为\textsf{源语言程序})等价地转换成另一种语言程序(称为\textsf{目标语言程序})的程序.
 
-    \subparagraph{编译程序}    把某一种高级语言程序等价地转换成另一种低级语言程序(如汇编语言或机器语言程序)的程序. 高级语言源程序通过编译程序生成面向机器的代码, 可能需要用到汇编程序和装配程序.
+        \item[编译程序]    把某一种高级语言程序等价地转换成另一种低级语言程序(如汇编语言或机器语言程序)的程序. 高级语言源程序通过编译程序生成面向机器的代码, 可能需要用到汇编程序和装配程序.
 
-        \begin{description}
-            \item[诊断编译程序] 专门用于帮助程序开发和调试的编译程序
-            \item[优化编译程序] 着重于提高目标代码效率的编译程序
-            \item[交叉编译程序] 产生不同于其宿主机的机器代码
-            \item[可变目标编译程序] 不需重写编译程序中与机器无关的部分就能改变目标机的编译程序
-        \end{description}
+            \begin{description}
+                \item[诊断编译程序] 专门用于帮助程序开发和调试的编译程序
+                \item[优化编译程序] 着重于提高目标代码效率的编译程序
+                \item[交叉编译程序] 产生不同于其宿主机的机器代码
+                \item[可变目标编译程序] 不需重写编译程序中与机器无关的部分就能改变目标机的编译程序
+            \end{description}
 
-    \subparagraph{解释程序}    把源语言写的源程序作为输入, 但不产生目标程序, 而是边解释边执行源程序本身. 编译程序的许多构造与实现技术同样适用于解释程序.
+        \item[解释程序]    把源语言写的源程序作为输入, 但不产生目标程序, 而是边解释边执行源程序本身. 编译程序的许多构造与实现技术同样适用于解释程序.
+    \end{description}
 
     \subsection{编译程序历史}
 
@@ -66,9 +68,9 @@
 
         任务: 扫描和分解字符串, 识别\{定义符, 标识符, 分界符, 运算符, 常数\}
 
-        依据: 构词规则
+        依据: 构词规则.
 
-        主要理论基础: 自动机理论
+        主要理论基础: 自动机理论.
 
         描述词法规则的有效工具是正规式和有限自动机.
 
@@ -82,11 +84,11 @@
 
         词法分析是一种线性分析, 而语法分析是一种层次结构分析.
 
-    \subsection{语义分析和中间代码生成(IR\protect\footnote{intermediate representation} generation)}
+    \subsection{语义分析和中间代码生成(IR generation)}
 
         任务: 在语法范畴进行初步翻译, 翻译成等价的中间语言.
 
-        \textbf{中间语言}被认为是一种形式化的语言, 其中的一种叫做四元式.
+        \textbf{中间语言}(intermediate representation)被认为是一种形式化的语言, 其中的一种叫做四元式.
 
         依据: 语义规则
 
@@ -94,15 +96,17 @@
 
     \subsection{中间代码优化(IR optimization)}
 
-        任务: 对代码(主要是中间代码)进行加工变换, 在\textsl{执行结果相同}的情况下产生\textsl{时间和空间上}更高效的中间代码.
+        任务: 对代码(主要是中间代码)进行加工变换, 在\textbf{执行结果相同}的情况下产生\textbf{时间和空间上}更高效的中间代码.
 
         依据: 程序等价变换规则
 
         主要理论基础: 数据流方程
 
+        虽然名为optimization, 一般的实现是improvement, 并非寻找最优解.
+
     \subsection{目标代码生成(code generation)}
 
-        任务: 将中间代码变换为\textsl{特定机器}上的低级机器语言代码
+        任务: 将中间代码变换为\textbf{特定机器}上的低级机器语言代码
 
         \begin{itemize}
             \item 内存单元分配
@@ -141,7 +145,7 @@
 
     \subsection{遍}
 
-        \textsf{遍}(pass): 对源程序或源程序的中间结果\textbf{从头到尾扫描一次}并\textbf{做有关的加工处理}, 生成新的中间结果或目标程序. 不是每种语言都可以用单遍编译程序实现.
+        \textsf{遍}(pass): 对源程序或源程序的中间结果\textbf{从头到尾扫描一次}并\textbf{做有关的加工处理}, 生成新的中间结果或目标程序. 不是每种语言都可以用单遍编译程序实现. C和C++特意设计为适合单遍编译程序, Java必须使用多遍编译.
 
     \subsection{编译的前端和后端}
 
@@ -170,14 +174,18 @@
         用高级语言写高级语言编译器的工具.
 
         \begin{figure}[h]\centering
-            \begin{minipage}{0.5\linewidth} \centering
+            %\begin{minipage}{0.5\linewidth} \centering
                 \includegraphics[width=5cm]{compile_chaps/lect2_inc/Bootstrapping-t-diagram.png}
                 \caption{Bootstrapping-t-diagram}
                 \label{fig:2:bootstrapping}
                 % https://secure.wikimedia.org/wikipedia/en/wiki/File:Bootstrapping-t-diagram.png
                 % 公有领域
-            \end{minipage}
-            \begin{minipage}{0.45\linewidth}
+            %\end{minipage}
+        \end{figure}
+
+        \begin{figure}[h] \centering
+            \begin{minipage}{0.65\linewidth}
+                \begin{center}
                 {\small
 \begin{verbatim}          +--------------+    +--------------+
           | L3        A0 |    | L3        A0 |
@@ -188,6 +196,7 @@
      +----+----+    +----+----+
                | A0 |
                +----+\end{verbatim}}
+                \end{center}
                 \caption{3级自展技术(取自百度贴吧)}
                 \label{fig:2:3-self-extract}
                 % http://tieba.baidu.com/f?kz=387450349

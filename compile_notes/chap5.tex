@@ -2,25 +2,31 @@
 
 \chapter{自下而上的语法分析}
 
-    从输入串开始, 逐步进行\textsf{归约}, 直到到达文法的开始符号, 恢复一系列token表述的结构.
+    从输入串开始, 逐步进行\textsf{归约}, 直到到达文法的开始符号, 恢复一系列token表述的结构. 也称\textsf{移进--- 归约}法.
 
     \section{基本问题}
 
-        在任何时刻, 找出句型的句柄.
+        在任何时刻, 找出句型的句柄. 两个问题:
 
-        \subparagraph{归约} 将符号放入栈, 当栈顶形成某个表达式的一个候选式时将这部分归约为对应产生式的左部符号.
+        \begin{enumerate}
+            \item 如何从句型中找到句柄?
+            \item 在满足多个产生式时, 如何选取?
+        \end{enumerate}
 
-        \subparagraph{句柄} 从$uvw$到$uAw$的归约过程中, $A\to v$是一个句柄.
+        \textsf{归约}: 将符号放入栈, 当栈顶形成某个表达式的一个候选式时将这部分归约为对应产生式的左部符号.
 
-        \subparagraph{短语} 令$S$是文法$G$的开始符号, 若$\alpha\beta\delta$是$G$的一个句型, 若有$S\stackrel{*}{\Rightarrow}\alpha A\delta$且$A\stackrel{+}{\Rightarrow}\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于非终结符$A$的\textsf{短语}. 如果有$A\to\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于规则$A\to\beta$的\textsf{直接短语}. 一个句型的\textsf{最左直接短语}称为该句型的\textsf{句柄}. \textsf{规范推导}即最右推导. \textsf{规范句型}即由规范推导得到的句型.
+        \textsf{句柄}: 从$uvw$到$uAw$的归约过程中, $A\to v$是一个句柄.
+
+        \textsf{短语}: 令$S$是文法$G$的开始符号, 若$\alpha\beta\delta$是$G$的一个句型, 若有$S\stackrel{*}{\Rightarrow}\alpha A\delta$且$A\stackrel{+}{\Rightarrow}\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于非终结符$A$的\textsf{短语}. 如果有$A\to\beta$, 则称$\beta$是句型$\alpha\beta\delta$相对于规则$A\to\beta$的\textsf{直接短语}. 一个句型的\textsf{最左直接短语}称为该句型的\textsf{句柄}. \textsf{规范推导}即最右推导. \textsf{规范句型}即由规范推导得到的句型. $\because E\Rightarrow E+T\Rightarrow E+T*F, \therefore E+T*F$是文法$G$的一个句型, 其中短语有$T*F, E+T*F$, 直接短语是$T*F$, 句柄是$T*F$.
         % 课件上这里写错了
 
-        \subparagraph{规范归约} 关于句型$\alpha$的一个最右推导的逆过程, 也称为\textsf{最左归约}.
+        \textsf{规范归约}: 关于句型$\alpha$的一个最右推导的逆过程, 也称为\textsf{最左归约}.
 
-        \paragraph{在哪里寻找句柄}
+        \subsection{在哪里寻找句柄}
             栈顶
 
-        \paragraph{动作}
+        \subsection{分析程序的动作}
+
         \begin{description}
             \item[移进] 下一输入符号移进栈顶
             \item[归约] 把句柄按产生式的左部进行归约
@@ -30,48 +36,133 @@
 
         被归约的串总是出现在栈顶.
 
-    \section{直观算符优先分析法}
-
-        任二个相继出现的终结符$a$与$b$(可能中间有$V_N$)的优先级可能有以下优先关系: $a\lessdot b$, $a\eqdot b$, $a\gtrdot b$. 采用\textbf{优先级表}\footnote{注: 我想到了中缀表达式转后缀表达式的算法\ldots}\footnote{明神指出, 严蔚敏《数据结构》里有这个例子, 一模一样}!
-        
-        直观算符优先文法仅仅按照优先级分析, 利用优先级的思想, 产生算符优先文法
+        \subsection{启示} 优先关系可以指导归约! 需要想办法把符号的优先关系表示出来.
 
     \section{算符优先分析}
 
+        \subsection{直观算符优先分析}
+
+            任二个相继出现的终结符$a$与$b$(中间可以有一个$V_N$符号)的优先级可能有以下优先关系\footnote{明神指出, 严蔚敏《数据结构》里有这个例子, 一模一样}: $a\lessdot b$, $a\eqdot b$, $a\gtrdot b$. 采用\textbf{优先级表}\footnote{我想到了中缀表达式转后缀表达式的算法.}!
+
+            $+\gtrdot+$的含义: 文法是左结合的. 标识符$i$大于任何人, 左括号除了右括号以外小于任何人.
+
+            直观算符优先文法仅仅按照优先级分析, 限于算术表达式. 利用优先级的思想, 产生算符优先文法.
+
+            具体执行时, 可以设置运算符栈Operator和操作数栈Operand, 也可以只用一个栈.
+
         \subsection{算符优先文法}
 
-            \begin{enumerate}
-                \item 不存在$A\to \cdots NQ\cdots$
-                \item 文法规定$V_T$符号被归约的顺序
-                \item 两个$V_T$符号的优先关系至多存在一个
-            \end{enumerate}
+            \subsubsection{三条定义}
 
-            关键: \textsf{优先表}(构造, 使用的算法)
-            如果一个文法的任何产生式右部都不含两个相继(并列)的非终结符, 即不含有$\cdots QR\cdots$形式的产生式右部则我们称该文法为\textsf{算符文法}. 假定$G$是一个不含$\varepsilon-$产生式的算符文法. 对于任何一对终结符$a$, $b$, 我们说: 
-            \begin{itemize}
-                \item $a\eqdot b$当且仅当文法$G$中含有形如$P\to \cdots ab\cdots$或$P\to \cdots aQb\cdots$的产生式
-                \item $a\lessdot b$当且仅当$G$中含有形如$P\to \cdots aR\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}b\cdots$或$R\stackrel{+}{\Rightarrow}Qb\cdots$
-                \item $a\gtrdot b$当且仅当$G$中含有形如$P\to \cdots Rb\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}\cdots a$或$R\stackrel{+}{\Rightarrow}\cdots aQ$
-            \end{itemize}
-            如果一个算符文法$G$中的任何终结符对$(a,b)$至多只满足$a\eqdot b$, $a\lessdot b$, $a\gtrdot b$之一, 则称$G$是一个\textsf{算符优先文法}.
+                \begin{enumerate}
+                    \item 不存在$A\to \cdots NQ\cdots$, $N,Q\in V_N$ \hfill 这条定义的是算符文法
+                    \item 文法规定$V_T$符号被归约的顺序
+                    \item 两个$V_T$符号的优先关系至多存在一个 \hfill 不存在关系: 定义了错误状态
+                \end{enumerate}
+
+                如果一个文法的任何产生式右部都不含两个相继(并列)的非终结符, 即不含有$\cdots QR\cdots$形式的产生式右部则我们称该文法为\textsf{算符文法}. 假定$G$是一个不含$\varepsilon-$产生式的算符文法, 对于任何一对终结符$a$, $b$, 我们说: 
+                \begin{itemize}
+                    \item $a\eqdot b\iff$文法$G$中含有形如$P\to \cdots ab\cdots$或$P\to \cdots aQb\cdots$的产生式
+                    \item $a\lessdot b\iff G$中含有形如$P\to \cdots aR\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}b\cdots$或$R\stackrel{+}{\Rightarrow}Qb\cdots$
+                    \item $a\gtrdot b\iff G$中含有形如$P\to \cdots Rb\cdots$的产生式, 而$R\stackrel{+}{\Rightarrow}\cdots a$或$R\stackrel{+}{\Rightarrow}\cdots aQ$
+                \end{itemize}
+                如果一个算符文法$G$中的任何终结符对$(a,b)$至多只满足$a\eqdot b$, $a\lessdot b$, $a\gtrdot b$之一, 则称$G$是一个\textsf{算符优先文法}.
+
+            \subsubsection{性质}
+
+                算符的优先级体现的是被归约的优先级. 构造的关键是\textsf{优先表}(重点在于构造的过程和使用的算法).
 
         \subsection{从算符优先文法构造优先关系表}
 
-            \subparagraph{定义}
+            \subsubsection{定义}
 
-                % TODO
+                找出所有$<V_T, V_T>$上的关系. 对于$\eqdot$可以检查所有$G$中的$P$, $\lessdot$和$\gtrdot$不易检查, 因此要定义两个集合: $\mathrm{FIRSTVT}(P)=\{a|P\stackrel{+}{\Rightarrow}a\cdots\vee P\stackrel{+}{\Rightarrow}Qa\cdots, a\in V_T, Q\in V_N\}$, $\mathrm{LASTVT}(P)=\{a|P\stackrel{+}{\Rightarrow}\cdots a\vee P\stackrel{+}{\Rightarrow}\cdots aQ, a\in V_T, Q\in V_N\}$.
 
-            \subparagraph{定理}
+            \subsubsection{定理}
 
                 算符优先文法句型的一般形式: $\#N_1a_1N_2a_2\cdots N_na_nN_{n+1}\#$, 其中$a_i\in V_T$, $N_i\in V_N|\wedge$.
 
-                \textsf{最左素短语}是满足以下条件的最左子串$N_ja_j\cdots N_ia_iN_{i+1}$: $a_{j-1}\lessdot a_j$, $a_j\eqdot a_{j+1}, \cdots, a_{i-1}\eqdot a_i$, $a_i\gtrdot a_{i+1}$.
+                \textsf{最左素短语}是满足以下条件的最左子串$N_ja_j\cdots N_ia_iN_{i+1}$: $a_{j-1}\lessdot a_j$, $a_j\eqdot a_{j+1}, \cdots, \\a_{i-1}\eqdot a_i$, $a_i\gtrdot a_{i+1}$, 形成``驼峰结构''.
 
                 % 判断时忽略$V_N$符号
 
-                % 单非产生式
+                \textsf{单非产生式}: $F\to p$, 右部只有一个非终结符号, 没有出现终结符.
 
-            \subparagraph{优缺点}
+            \begin{algorithm}
+                \caption{构造FIRSTVT($P$)和LASTVT($P$)}
+                \label{algorithm-firstvt-lastvt}
+                \begin{algorithmic}[1]
+                    \Procedure{InsertF}{$P$, $a$}
+                        \If{$\neg F[P,a]$}
+                            \State $F[P,a]\gets\ $True
+                            \State \Call{Stack.Push}{$P,a$}
+                        \EndIf
+                    \EndProcedure
+                    \Procedure{Make-FirstVT}{}
+                        \ForAll{$(P\in V_T, a\in V_N)$}
+                            \State $F[P,a]\gets\ $False
+                        \EndFor
+                        \ForAll{\uline{形如$P\to a\cdots$或$P\to Qa\cdots$的产生式}}
+                            \State \Call{InsertF}{$P, a$}
+                        \EndFor
+                        \While{Stack is not empty}
+                            \State $(Q, a)\gets\ $\Call{Stack.Pop}{}
+                            \ForAll{\uline{形如$P\to Q\cdots$的产生式}}
+                                \State \Call{InsertF}{$P, a$}
+                            \EndFor
+                        \EndWhile
+                    \EndProcedure
+                    \State
+                    \Procedure{InsertL}{$P$, $a$}
+                        \If{$\neg L[P,a]$}
+                            \State $L[P,a]\gets$\ True
+                            \State \Call{Stack.Push}{$P,a$}
+                        \EndIf
+                    \EndProcedure
+                    \Procedure{Make-LastVT}{}
+                        \ForAll{$(P\in V_T, a\in V_N)$}
+                            \State $L[P,a]\gets\ $False
+                        \EndFor
+                        \ForAll{\uline{形如$P\to \cdots a$或$P\to\cdots aQ$的产生式}}
+                            \State \Call{InsertL}{$P, a$}
+                        \EndFor
+                        \While{Stack is not empty}
+                            \State $(Q, a)\gets\ $\Call{Stack.Pop}{}
+                            \ForAll{\uline{形如$P\to\cdots Q$的产生式}}
+                                \State \Call{InsertL}{$P, a$}
+                            \EndFor
+                        \EndWhile
+                    \EndProcedure
+                \end{algorithmic}
+            \end{algorithm}
+
+            \begin{algorithm}
+                \caption{构造算符优先文法的优先关系表}
+                \label{algorithm-make-priority-table}
+                \begin{algorithmic}[1]
+                    \Procedure{Make-Priority-Table}{}
+                        \ForAll{产生式$P\to X_1X_2\cdots X_n$}
+                            \For{$i:=1$\ to $n-1$}
+                                \If{$X_i\in V_T \wedge X_{i+1}\in V_T$}
+                                    \State $X_i\eqdot X_{i+1}$
+                                \ElsIf{$i\leqslant n-2 \wedge X_i\in V_T \wedge X_{i+1}\in V_N \wedge X_{i+2}\in V_T$}
+                                    \State $X_i\eqdot X_{i+2}$
+                                \ElsIf{$X_i\in V_T \wedge X_{i+1}\in V_N$}
+                                    \ForAll{$a\in\mathrm{FIRSTVT}(X_{i+1})$}
+                                        \State $X_i\lessdot a$
+                                    \EndFor
+                                \ElsIf{$X_i\in V_N \wedge X_{i+1}\in V_T$}
+                                    \ForAll{$a\in\mathrm{LASTVT}(X_i)$}
+                                        \State $a\gtrdot X_{i+1}$
+                                    \EndFor
+                                \EndIf
+                            \EndFor
+                        \EndFor
+                    \EndProcedure
+                \end{algorithmic}
+            \end{algorithm}
+
+            \subsubsection{优缺点}
 
                 速度快, 会误判
 
@@ -97,38 +188,70 @@
 
             引入优先函数来代替优先表, 可以满足大多数情况的需求, 但无法表示语法上的错误. 实质是变相的查表. 优点: 节约存储空间; 缺点: 不能正确表示表格中``出错''(不可比较)的情况.
 
-            不唯一.
+            \subsubsection{性质的讨论} 
+            
+                \begin{description}
+                    \item[正确性] 可解的地方正确, 不可解的地方无法直接发现错误.
+                    \item[存在性] 并非总能映射! 证明: 构造反例.
+                    \item[唯一性] \textsf{入栈优先函数}$f(\theta)$和\textsf{比较优先函数}$g(\theta)$不唯一.
+                \end{description}
 
-            \subparagraph{存在性} 并非总能映射! 证明: 举反例.
+            \subsubsection{生成方法} 有向图, 类似拓扑排序. $f(a)$是从$f_a$组开始的路径长度和.
 
-            \subparagraph{生成方法} 有向图, 类似拓扑排序. $f(a)=$从$f_a$组开始的路径长度和.
+    \section{LR(0)分析法}
 
-    \section{LR分析法}
+        LR(0)分析: 从左到右扫描输入串, 最右识别句柄, 自下而上归约, 不超前扫描. 通常采用动作(action)表和跳转(goto)表实现. 
 
-        LR分析: 从左到右扫描输入串, 识别句柄, 自下而上归约
+        \subsection{LR文法}
 
-        \paragraph{初态}
+            如果一个文法可以构建一张分析表, 每个入口都是唯一确定的, 这个文法就称为\textsf{LR文法}. 如果文法可以用一个每步向前最多检查$k$个输入符号的LR分析器进行分析, 这个文法就称为\textsf{LR($k$)文法}.
 
-            $(S_0, \#, a_1,a_2, \cdots, a_n, \#)$
+        \subsection{LR分析程序}
 
-        \paragraph{一般情况}
+            实质: 分析栈+DFA. 使用双栈: 状态栈, 符号栈.
 
-            $(S_0S_1\cdots S_n, \#x_1x_2\cdots x_m, a_ia_{i+1}\cdots a_n\#)$
+            \subsubsection{初态}
 
-        \paragraph{动作}
+                \[(S_0, \#, a_1,a_2, \cdots, a_n, \#)\]
 
-            \begin{enumerate}
-                \item ACTION$[S_m,a_i]$为移进, $S=GOTO[S_m,a_i]$:
-                    \[(S_0S_1\cdots S_mS, \#x_1x_2\cdots x_ma_i, a_{i+1}\cdots a_n\#)\]
-                \item ACTION$[S_m,a_i]=\{A\to B\}$, 则
-                    \[(S_0S_1\cdots S_{m-1}S, \#x_1x_2\cdots x_{m-r}A, a_ia_{i+1}\cdots a_n\#)\]
-                    $S=GOTO[S_{m-r},A]$, $r=|\beta|$, $\beta=x_{m-r+1}\cdots x_m$
-                \item AC
-                \item ERR
-            \end{enumerate}
+            \subsubsection{一般情况}
 
-        \subsubsection{LR分析程序}
+                \[(S_0S_1\cdots S_n, \#x_1x_2\cdots x_m, a_ia_{i+1}\cdots a_n\#)\]
 
-            \paragraph{实质} 分析栈+DFA
+            \subsubsection{动作}
 
-                
+                \begin{enumerate}
+                    \item ACTION$[S_m,a_i]$为移进, $S=GOTO[S_m,a_i]$:
+                        \[(S_0S_1\cdots S_mS, \#x_1x_2\cdots x_m\uline{a_i, a_{i+1}}\cdots a_n\#)\]
+                    \item ACTION$[S_m,a_i]=\{A\to B\}$, 则
+                        \[(S_0S_1\cdots S_{m-1}S, \#x_1x_2\cdots \uline{x_{m-r}A}, a_ia_{i+1}\cdots a_n\#)\]
+                        $S=GOTO[S_{m-r},A]$, $r=|\beta|$, $\beta=x_{m-r+1}\cdots x_m$
+                    \item AC \hfill 成功匹配
+                    \item ERR \hfill 报告出错
+                \end{enumerate}
+
+                \begin{algorithm}
+                    \caption{LR(0)分析法}
+                    \label{algorithm-lr0}
+                    \begin{algorithmic}[1]
+                        \Procedure{LR0-Analysis}{}
+                            \While{Stack $\not=\emptyset$}
+                                \State state $\gets$ \Call{Stack.Top}{}
+                                \If{action[state] is shift} 
+                                    \State $t\ \gets$ 下一个输入符号
+                                    \State \Call{Stack.Push}{$t$, goto[state, $t$]}
+                                \ElsIf{action[state] is reduce $A\to v$}
+                                    \State \Call{Stack.Pop}{$|v|$}
+                                    \State top-state $\gets$ \Call{Stack.Top}{}
+                                    \State \Call{Stack.Push}{$A$, goto[$A$, top-state]}
+                                \Else
+                                    \State \Call{Error}{}
+                                \EndIf
+                            \EndWhile
+                        \EndProcedure
+                    \end{algorithmic}
+                \end{algorithm}
+
+        \subsection{LR(0)分析法的局限$^*$}
+
+            $E\to T$, $E\to T+E$在LR(0)分析中句柄会产生移进/归约冲突, 已经找到句柄却不知道如何归约. LR(0)能接受的文法必须对右侧无关. 提升: LR(1)分析, 能力强大, 自动机极其复杂(huge). 改进: SLR(1), LALR(1).

@@ -4,7 +4,7 @@
 
 执行词法分析的程序称为\textbf{词法分析器/扫描器}.
 
-\section{词法分析器的要求}
+\section{词法分析器}
 
     \subsection{词法分析器的功能和输出形式}
 
@@ -13,16 +13,16 @@
         \begin{enumerate}
             \item 关键字(保留字, reserved words)
             \item 标识符(identifiers), 在确定的语言中, 数量是无限的
-            \item 常量(constants), 数量是无限的
+            \item 常量(constants), 还可以按照类型细分, 数量是无限的
             \item 运算符(operators)
-            \item 界符(delimeter)
+            \item 界符(delimeters)
         \end{enumerate}
 
-        输出形式: 二元组(单词类别, 单词自身), 为了确保二元组大小相等, ``单词自身''可以是指针.
+        输出形式: 二元组(单词类别, 单词自身), 为了方便处理, 使得二元组大小相等, ``单词自身''可以是指针.
 
-        \subsubsection{词法分析和语法分析的关系}
+    \subsection{词法分析和语法分析的关系}
 
-            词法分析从语法分析中脱离出来的好处: 在这一步采用更简单的扫描方法.
+        词法分析从语法分析中脱离出来的好处: 在这一步采用更简单的扫描方法.
     
 \section{词法分析器的设计}
 
@@ -32,20 +32,22 @@
 
     \subsection{单词符号识别}
 
-        一些语言对关键字不做特殊保护, 如Fortran, 识别关键字比较麻烦. 一种解决方案是``超前搜索'', 但会造成词法分析器实现困难. 一种更常用的解决方案是对用户进行限制, 如禁止将保留字作为标识符, 将空格等符号作为界符.
+        一些语言对关键字不做特殊保护, 如Fortran, 识别关键字比较麻烦. 一种解决方案是\textsf{超前搜索}, 但会造成词法分析器实现困难. 一种更常用的解决方案是对用户进行限制, 如禁止将保留字作为标识符, 将空格等符号作为界符.
 
     \subsection{状态转换图}
 
-        一个有限有向图, 节点代表状态. 功能: 识别一定的字符串. \textsf{初态}对应转换图的启动条件, \textsf{终态}对应转换图的结束条件. 其中*代表读入了一个字符.
+        一个有限有向图, 节点代表状态. 功能: 识别一定的字符串. \textsf{初态}对应转换图的启动条件, 至少有一个, 用圆圈\pscirclebox{1}表示; \textsf{终态}对应转换图的结束条件, 用双圈\pscirclebox[doubleline=true]{1}表示. 其中*代表读入了一个字符.
+    
+        状态转换图可以使用子程序的方法进行构造, 每个状态对应一个程序段. 流程: 1. 取字母; 2. 找对应的状态转换规则; 失败处理: 回到起点尝试使用另一个状态转换规则. 最终仍不能匹配则是词法错误.
 
 \section{正规式}
 
-    字母表$\Sigma$上的正规式可以定义为:
+    \uline{字母表$\Sigma$上的}正规式可以定义为:
 
     \begin{enumerate}
-        \item $\varepsilon$是一个正规式, 代表$\{\varepsilon\}$,
-        \item 若$a\in\Sigma$, 则$a$是正规式, 代表$\{a\}$,
-        \item 若$r$和$s$是正规式, 分别记为$L(r)$和$L(s)$, 则
+        \item $\varepsilon$是一个正规式, 代表$\{\varepsilon\}$, $\phi$代表$\phi$, \hfill 钦定的
+        \item 若$a\in\Sigma$, 则$a$是正规式, 代表$\{a\}$, \hfill 本身就有的, 种子
+        \item 若$r$和$s$是正规式, 分别记为$L(r)$和$L(s)$, 则 \hfill 这条是递归的重要手段!
             \begin{enumerate}
                 \item $(r)$是正规式, 记作$L(r)$,
                 \item $(r)|(s)$是正规式, 记作$L(r)\cup L(s)$,
@@ -54,80 +56,105 @@
             \end{enumerate}
     \end{enumerate}
 
-    运算顺序为闭包, 连接和合取. 
+    运算顺序为闭包, 连接和合取. \textbf{正规}是指可以表达得非常清晰.
 
     \subsection{确定有限自动机(DFA)}
 
         DFA $M$=$(S,\Sigma,\delta,s_0,F)$, 其中$S$是状态集合, $\Sigma$是一个有穷字母表, $\delta$是从$S\times\Sigma\to S$的单值部分映射, 即后继状态表, $s_0\in S$是唯一的初态, $F\subset S$是可为空的终态集合.
 
-        DFA可用\textsf{状态转换矩阵}表示.
+        除了正规式以外, DFA还可用\textsf{状态转换矩阵}表示: 状态$\times$输入. DFA对应的\textsf{状态转换图}有一个初态节点和若干个或0个终态节点. 矩阵是死的, 方便存储; 转换图是活的, 方便研究和使用.
 
         如果一个DFA $M$的输入字母表为$\Sigma$, 则$M$也是$\Sigma$上的一个DFA. 可以证明, $\Sigma$上的一个字集$V\subset\Sigma^*$是正规的$\iff \exists\Sigma$上的DFA $M$, 使得$V=L(M)$.
 
-        DFA的确定性表现在映射$\delta$: $S\times\Sigma\to S$是一个单值函数. 如果允许是多值函数, 就得到了非确定自动机的概念.
+        DFA的\textsf{确定性}表现在映射$\delta$: $S\times\Sigma\to S$是一个\textsf{单值函数}. 如果允许是多值函数, 就得到了非确定自动机的概念.
 
+        数学定义要求DFA在每一个状态$s_0$对于任何一个输入字符都有转换的目标状态. 实际上, 若对应规则没有定义, 则认为进入了\textsf{出错}状态.
 
     \subsection{非确定有限自动机(NFA)}
         
         正规式可以被轻易转换为NFA.
 
-        NFA与DFA定义的区别: $\delta$是一个从$S\times\Sigma^*$的子集的映射, 即$\delta: S\times\Sigma^*\to2^S$
+        NFA与DFA定义的区别: $\delta$是一个从$S\times\Sigma^*$的子集的映射, 即$\delta: S\times\Sigma^*\to2^S$.
 
         表现在状态图上的区别: NFA允许接受$\varepsilon$或者多字母串作为单个输入. 
 
-        DFA是NFA的特例, 可以采用子集法将NFA确定化
+        DFA是NFA的特例, 可以采用子集法将NFA确定化.
 
     \subsection{子集法确定闭包}
 
         定义$\mathbf{I}$的$\varepsilon$-闭包($\varepsilon$-CLOSURE$(\mathbf{I})$):
         \begin{enumerate}
             \item 若$S\in \mathbf{I}$, 则$S\in \varepsilon$-CLOSURE$(\mathbf{I})$;
-            \item 若$S\in \mathbf{I}$, 则从$S$出发经过任意条$\varepsilon$弧能到达的任意状态$S'$都属于$\varepsilon$-CLOSURE$(\mathbf{I})$
+            \item 若$S\in \mathbf{I}$, 则从$S$出发经过任意条$\varepsilon$弧能到达的任意状态$S'$都属于$\varepsilon$-CLOSURE$(\mathbf{I})$.
         \end{enumerate}
 
-        $\mathbf{I}_a$定义: $\mathbf{I}_a=\varepsilon$-CLOSURE$(\mathbf{J})$, 其中$\mathbf{J}$是可从$\mathbf{I}$中的某一状态节点出发经过一条$a$弧到达的状态节点的全体.
+        $\mathbf{I}_a$定义: $\mathbf{I}_a=\varepsilon$-CLOSURE$(\mathbf{J})$, 其中$\mathbf{J}$是可从$\mathbf{I}$中的某一状态节点出发经过一条$a$弧到达的状态节点的全体. ($\mathbf{I}$里面的每一个状态走一下$a$, 出去的就是$\mathbf{J}$, 这部分$\varepsilon$一下就是$\mathbf{I}_a$)
 
-    \subsubsection{NFA$\to$DFA: 子集算法}
+    \subsection{NFA$\to$DFA: 子集算法}
 
         核心思想: 让DFA模拟NFA. DFA的状态对应NFA的一系列状态, DFA的状态迁移对应NFA中一系列状态的迁移.
 
         \begin{enumerate}
-            \item 构造初始化的表
-            \item 处理表的一行
+            \item 构造初始化的表 \\
+                若字母表$\Sigma=\{a_1,a_2,\cdots,a_k\}$, 则构造一张有$k+1$列的表, 首行首列为$\varepsilon$-CLOSURE($\mathbf{X}$).
+            \item 处理表的一行 \\
+                如果$\mathbf{I}_{a_i}$没有出现在左边一列, 就填到左边. 
+
+                \begin{center}
+                    \begin{minipage}[h!]{.4\linewidth}
+                        \centering 初始化的表 \\
+                        \begin{tabular}{ccccc} \toprule
+                             & $a_1$ & $a_2$ & \ldots & $a_k$ \\ \midrule
+                            $x_\varepsilon$ & $\mathbf{I}_{a_1}$ & $\mathbf{I}_{a_2}$ & \ldots & $\mathbf{I}_{a_k}$ \\
+                            \\ \bottomrule
+                        \end{tabular}
+                    \end{minipage}
+                    \begin{minipage}[h!]{.4\linewidth}
+                        \centering 处理过一行的表 \\
+                        \begin{tabular}{ccccc} \toprule
+                             & $a_1$ & $a_2$ & \ldots & $a_k$ \\ \midrule
+                            $x_\varepsilon$ & $\mathbf{I}_{a_1}$ & $\mathbf{I}_{a_2}$ & $\cdots$ & $\mathbf{I}_{a_k}$ \\
+                            $\mathbf{I}_{a_1}$ \\
+                            $\mathbf{I}_{a_2}$ \\
+                            $\vdots$ \\
+                            $\mathbf{I}_{a_k}$ \\ \bottomrule
+                        \end{tabular}
+                    \end{minipage}
+                \end{center}
             \item 重复处理
         \end{enumerate}
 
-        表的长度是有限的.
+        表的长度是有限的, 算法一定会结束, 因为状态只有有限个.
 
-        任何NFA都可以通过子集法变为对应的DFA, 但状态数可能达到指数级(空间换时间). 一种优化的做法是结合使用NFA和DFA.
+        任何NFA都可以通过子集法变为对应的DFA, 但状态数可能达到指数级(空间换时间), 因此通常用bison等工具生成自动机. 一种优化的做法是结合使用NFA和DFA.
 
     \subsection{正规文法与有限自动机的等价性}
 
         对于正规文法$G$和有限自动机$M$, 若$L(G)=L(M)$, 则称$G$和$M$是\textsf{等价}的.
 
         \begin{enumerate}
-            \item $\forall\textrm{正规文法}G, \exists \textrm{有限自动机}M, L(M)=L(G)$,
-            \item $\forall\textrm{有限自动机}M, \exists \textrm{正规文法}G, L(M)=L(G)$,
+            \item $\forall\textrm{正规文法}G, \exists \textrm{有限自动机}M, L(M)=L(G)$;
+            \item $\forall\textrm{有限自动机}M, \exists \textrm{正规文法}G, L(M)=L(G)$.
         \end{enumerate}
 
         \subsubsection{并非所有文法都是正规的}
 
-            $L_1=\{p^kq^k\}$和$L_2=\{wcw^r|w\in\Sigma^*\}$都不是正规式, \textbf{DFA无法计数}.
+            $L_1=\{p^kq^k\}$和$L_2=\{wcw^r|w\in\Sigma^*\}$都不是正规式, \textbf{DFA无法实现计数的功能}\footnote{证明需要用到Pumping引理}.
 
     \subsection{正规式和有限自动机的等价性}
 
         \begin{enumerate}
-            \item $\forall\textrm{有限自动机}M,\exists\textrm{正规式}r, L(r)=L(G)$,
-            \item $\forall\textrm{正规式}r,\exists\textrm{有限自动机}M, L(r)=L(G)$,
+            \item $\forall\textrm{有限自动机}M,\exists\textrm{正规式}r, L(r)=L(G)$;
+            \item $\forall\textrm{正规式}r,\exists\textrm{有限自动机}M, L(r)=L(G)$.
         \end{enumerate}
 
     \subsection{确定机的化简}
 
-        寻找状态数比$M$少的一个DFA $M'$, 使得$L(M)=L(M')$
+        寻找状态数比$M$少的一个DFA $M'$, 使得$L(M)=L(M')$. 目的: 将$M$的状态集分割成一些不相交的子集, 使得任意两个子集中的状态都是可区别的, 同一集合中的两个状态都是等价的. 
 
 \section{词法分析器}
 
-    \newcommand{\pb}[1]{\parbox[c]{12ex}{#1}}
+    \newcommand{\pb}[1]{\hskip .25cm \parbox[c]{12ex}{#1}}
     \begin{figure}[h!]\centering
         \begin{psmatrix}[rowsep=0.5]
             \psframebox{对$x$的描述} & \psframebox{$x$的生成器} & \psframebox{$x$} \\
@@ -145,13 +172,23 @@
         \label{fig:lex}
     \end{figure}
 
-    X的描述通过生成器生成X. lex是词法分析器的生成器, 生成词法分析器.
+    $X$的描述通过生成器生成$X$. lex是词法分析器的生成器, 生成词法分析器.
 
-    我们已经了解到, \textbf{各种语言的构成规则可以通过正规式来描述}. 其中3类是可以穷举的. \textbf{正规式和DFA是等价的}.
+    我们已经了解到, \textbf{各种语言的构成规则可以通过正规式来描述}, 5类单词中有3类是可以穷举的. \textbf{正规式和DFA是等价的}, 有算法可以转换.
 
-    \subsection{语言lex的一般描述}
+    \subsection{词法分析器的自动生成器的理论基础}
 
-        lex源程序$=$正规定义式$+$识别规则. \textsf{正规定义式}: 定义在字母表$\Sigma$上的正规定义式序列: $d_1\to r_1, d_2\to r_2$, 其中$d_i$表示不同名字, $r_i$为正规式. Pascal的标识符集合: $letter\to \cdots, digit\to \cdots, id\to letter(letter|digit)^*$.
+    \textsf{词法分析}是指将输入的字符序列转换为\textsf{单词}(token)序列的过程, 其中单词是构成源代码的最小单位. 词法分析器的设计需要根据特定语言的词法规则, 词法规则可以用正规式表示.
+
+    \textbf{词法分析器的自动生成器的理论基础是\underline{控制规则的普遍性}与\underline{正规式和DFA的等价性}}.
+
+    \textsf{词法分析器}主要由\textsf{控制逻辑}和\textsf{转化表}构成. 由同一个词法分析器生成器生成的不同的词法分析器的控制逻辑是一样的, 它的作用是从输入流读入字符$\to$在DFA上运行$\to$执行最大串匹配$\to$判别是否达到终态$\to$构造二元组返回, 在满足上下文无关文法的前提下, \textbf{一套控制逻辑适用于一切语言}.
+
+    除此之外, 词法分析器还要生成转化表, 而\textbf{转化表可以根据词法规则经过机械操作生成得到}(将NFA合并, 确定化得到等价的DFA). 例如, Lex/flex的源程序包括了正规定义式和识别规则两部分.
+
+    \subsection{lex语言的一般描述}
+
+        lex源程序$=$正规定义式$+$识别规则. \textsf{正规定义式}: 定义在字母表$\Sigma$上的正规定义式序列: $d_1\to r_1, d_2\to r_2$, $\cdots$, 其中$d_i$表示不同名字, $r_i$为正规式. Pascal的标识符集合: $letter\to \cdots, digit\to \cdots, id\to letter(letter|digit)^*$.
 
         lex源程序的识别规则是一串如下形式的lex语句:
 \begin{verbatim}
@@ -169,38 +206,49 @@ Pm {Am}
 
         词法分析器的两部分: 控制, 转化表. 同一个词法分析器生成器生成的不同词法分析器的控制部分是一样的, 但转化表不同. 控制部分的功能:读字符, 在DFA上运行, 最大串匹配, 终态判别, 构造二元组返回.
 
-\section{上下文无关文法(Context-free Grammar)}
+\section{上下文无关文法}
 
-    研究上下文无关文法的目的: 语言的语法结构的形式描述; 从形式描述中, 研究语法分析器的构造.
+    研究上下文无关文法的目的: 从语言的语法结构的形式描述中, 研究语法分析器的构造.
 
     \subsection{引言}
 
-        \textsf{文法(grammar)}是描述语言的语法结构的形式规则, 目的是解决语言的有穷说明问题, 包含对语法的描述, 但却不表达任何语义. 文法的描述应当: 形式上严格准确, 易于理解, 具有较强的描述能力, 有利于句子的分析和翻译, 构造语法分析器.
+        \textsf{文法(grammar)}是描述语言的语法结构的形式规则, 目的是解决语言的有穷说明问题, 包含对语法的描述, 但却不表达任何语义. 文法的描述应当: 形式上严格准确, 易于理解, 具有较强的描述能力, 有利于句子的分析和翻译以及构造语法分析器.
 
-        文法分为4类, 对应4类语言. 与程序语言语法有关的是上下文无关文法(2型文法). 0型文法: $G=(V_T, V_N, S, \mathcal{P})$, 产生式$\alpha\to\beta$满足$\alpha\in(V_N\cup V_T)^*$且至少含有一个$V_N$符, $\beta\in(V_N\cup V_T)^*$. 2型文法: $\alpha$串改为$A$符号. 3型文法: 只允许一个非终结符号且在最右边 $A\to\alpha B$. 形式文法不能描述自然语言.
+        文法分为4类, 对应4类语言. 与程序语言语法有关的是上下文无关文法(2型文法). 0型文法: $G=(V_T, V_N, S, \mathcal{P})$, 产生式$\alpha\to\beta\in\mathcal{P}$满足$\alpha\in(V_N\cup V_T)^*$且至少含有一个$V_N$符, $\beta\in(V_N\cup V_T)^*$, 能力和图灵机相同, 任何0型语言都是枚举可递归的. 1型文法也叫\textsf{上下文有关文法}, 对终结符替换时需要考虑上下文并且一般不允许替换为$\varepsilon$. 2型文法: $\alpha$串改为$A$符号. 3型文法: 只允许一个非终结符号且在最右边或最左边 $A\to\alpha B$, 可以描述词法规则. 形式文法不能描述自然语言.
 
-        \textsf{上下文无关文法}定义的语法范畴(或语法单位)完全独立于这种范畴可能出现的环境. 只能描述一部分语言. 上下文无关文法$G$是一个四元式$(V_T,V_N,S,\mathcal{P})$, 其中$V_T$是非空有限集, 元素是终结符号, $V_N$元素是非终结符号, $S\in V_N$称为开始符号, $\mathcal{P}$是产生式集合, 每个产生式形式是$\{P\to\alpha|P\in V_N, \alpha\in(V_T\cup V_N)^*, \textrm{S至少一次为P}\}$. \textsf{终结符号}: 用以组成语言中的串的\textbf{基本}符号; \textsf{非终结符}: 是标记某种\textbf{串}的集合的特定符号. \textsf{开始符号}是一个非终结符号, 标记感兴趣的语法范畴, 定义文法的顶层. C语言的开始符号: 程序. \textsf{产生式}规定由终结符和别的语法范畴组成一个新的语法范畴的方法, 语法结构: 非终结符$\to$一串非终结符和终结符. 
+        \textsf{上下文无关文法}定义的语法范畴(或语法单位)完全独立于这种范畴可能出现的环境. 只能描述一部分语言. 上下文无关文法$G$是一个四元式$(V_T,V_N,S,\mathcal{P})$, 其中$V_T$是非空有限集, 元素是终结符号, $V_N$元素是非终结符号, $S\in V_N$称为开始符号, $\mathcal{P}$是产生式集合, 每个产生式形式是$\{P\to\alpha|P\in V_N, \alpha\in(V_T\cup V_N)^*, \textrm{$S$至少一次为$P$}\}$. \textsf{终结符号}: 用以组成语言中的串的\textbf{基本}符号, 也就是token; \textsf{非终结符}: 是标记某种\textbf{串}的集合的特定符号, 也叫\textsf{语法变量}和\textsf{语法范畴}. \textsf{开始符号}是一个非终结符号, 标记感兴趣的语法范畴, 定义文法的顶层, 通常记为$S$. C语言的开始符号是程序. \textsf{产生式}规定由终结符和别的语法范畴组成一个新的语法范畴的方法, 语法结构: 非终结符$\to$一串非终结符和终结符. 
 
-        用有穷条产生式得到无穷的表达式语言, 必须递归.
+        用有穷条产生式得到无穷的表达式语言, 必须用到递归.
+
+    \subsection{推导}
 
         \textsf{直接推导}是两个字符串之间的一种关系: $(\alpha A\beta)\mathcal{R}(\alpha\gamma\beta)$, 若$A\to\gamma\in\mathcal{P}, \alpha, \beta\in V^*, V=V_T\cup V_N$, 则$\mathcal{R}$就是直接推导, 记为$\alpha A\beta\Rightarrow\alpha\gamma\beta$. \textsf{推导}是两个串$u_0, u_n$存在一个串序列$u_0\Rightarrow u_1\Rightarrow \cdots\Rightarrow u_n$, 则$u_0\mathcal{R}_1u_n$. $u_0\stackrel{+}{\Rightarrow}u_n$表示从$u_0$出发, 经过一步或若干步可推导出$u_n$. $u_0\stackrel{*}{\Rightarrow}u_n$表示从$u_0$出发, 经过零步或若干步可推导出$u_n$. 
 
-        要由推导引出语言, 限制推导中的$u_0$为$S$, 推导要从开始符号开始. $S\stackrel{*}{\Rightarrow}\alpha, \alpha\in V^*$, 称$\alpha$为$G$的\textsf{句型}, 如再要求$\alpha\in V_T^*$, 则$\alpha$为$G$的\textsf{句子}. 文法$G$所产生的句子的全体是一个\textsf{语言}, 记为$L(G)=\{\alpha|S\stackrel{+}{\Rightarrow}\alpha\&\alpha\in V_T^*\}$. 从一个句型到另一个句型的推导过程一般不唯一, 通常只考虑最左推导和最右推导.
+        要由推导引出语言, 限制推导中的$u_0$为$S$, 推导要从开始符号开始. $S\stackrel{*}{\Rightarrow}\alpha, \alpha\in V^*$, 称$\alpha$为$G$的\textsf{句型}, 如再要求$\alpha\in V_T^*$, 则$\alpha$为$G$的\textsf{句子}. 文法$G$所产生的句子的全体是一个\textsf{语言}, 记为$L(G)=\{\alpha|S\stackrel{+}{\Rightarrow}\alpha\wedge \alpha\in V_T^*\}$. 从一个句型到另一个句型的推导过程一般不唯一, 通常只考虑最左推导和最右推导. \textsf{最左推导}: 每一个推导步骤$\alpha A\gamma\Rightarrow\alpha\beta\gamma$中的$\alpha$都由终结符构成.
 
     \subsection{语法树和二义性}
 
-        \textsf{语法树}是为了理解句子的语法, 得到句子如何从开始符号推导得到, 因此引入的图形. 它是句型推导的图形表示. 树的内节点对应非终结符号, 叶子对应非终结符号(句型)或者终结符号. 不同推导过程得到相同的语法树; 有时根据应用规则不同得到不同的语法树, 此时称文法$G$为\textsf{二义的}. 文法的二义性是不可判定的. 有些文法生来就是二义的(inherently ambiguous). 在大多数情况下, 二义性存在于文法中, 而非语言本身.
+        \subsubsection{语法树}
 
-        解决二义性: 重写语法$G_0:E\to E+E|E*E|(E)|id$为$G_1:E\to E+T|T, T\to T+F|F, F\to(E)|id$, \textbf{规定优先级}, 没有机械的方法.
+            \textsf{语法树}是为了理解句子的语法, 得到句子如何从开始符号推导得到, 因此引入的图形. 它是句型推导的图形表示. 
+            
+            树的内节点对应非终结符号, 叶子对应非终结符号(句型)或者终结符号. 一级子树对应直接推导, 任何一次全剪对应一个句型, $\forall$叶子$\in V_T$时, 将叶子顺序排列得到句子.
+            
+        \subsubsection{二义性}
 
-        上下文无关文法有如下限制:
+            不同推导过程通常得到相同的语法树; 有时根据应用规则不同得到不同的语法树, 此时称文法$G$为\textsf{二义的}. 文法的二义性是不可判定的. 有些文法生来就是二义的(inherently ambiguous). 在大多数情况下, 二义性存在于文法中, 而非语言本身.
 
-        \begin{enumerate}
-            \item $G$不会产生$P\to P$
-            \item $\forall P\in V_N$, 必须都有用处, 即
+            解决二义性: 重写语法$G_0:E\to E+E|E*E|(E)|i$为$G_1:E\to E+T|T, T\to T+F|F, F\to(E)|i$, \textbf{规定优先级}. 没有机械的方法.
+
+    \subsection{对描述程序设计语言的上下文无关文法的限制}
+
+        做一些简单的约定来避免二义性.
+
+        \begin{itemize}
+            \item $G$不会产生$P\to P$ \hfill $P\to P$会立刻带来二义性
+            \item $\forall P\in V_N$必须都有用处, 即
                 \begin{itemize}
-                    \item $\exists S\stackrel{*}{\Rightarrow} \alpha P\beta$, $P$在句型中出现
-                    \item $\exists \gamma\in V_T^*, P\stackrel{+}{\Rightarrow}\gamma$, 即对$P$不存在不终结的回路.
+                    \item $\exists S\stackrel{*}{\Rightarrow} \alpha P\beta$, $P$在句型中出现,
+                    \item $\exists \gamma\in V_T^*, P\stackrel{+}{\Rightarrow}\gamma$, 即对$P$不存在不终结的回路. \hfill 要能推出$V_T$串来
                 \end{itemize}
-        \end{enumerate}
-
+        \end{itemize}
