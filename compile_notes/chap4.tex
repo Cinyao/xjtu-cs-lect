@@ -158,10 +158,10 @@
                                 \EndIf
                             \EndWhile
                         \fi
-                            \ForAll{$\varepsilon\in\mathrm{FIRST}(X_j), 1\leqslant j\leqslant i-1,$}
+                            \ForAll{$\varepsilon\in\mathrm{FIRST}(X_j), 1\leqslant \forall j\leqslant i-1,$}
                                 \State ret $\gets$\ ret $\cap\ \mathrm{FIRST}\backslash\{\varepsilon\}$
                             \EndFor
-                            \If{$\forall \varepsilon\in\mathrm{FIRST}(X_j), 1\leqslant j\leqslant n$}
+                            \If{$\varepsilon\in\mathrm{FIRST}(X_j), 1\leqslant \forall j\leqslant n$}
                                 \State ret $\gets$\ ret $\cap\ \varepsilon$
                             \EndIf
                             \State \Return ret
